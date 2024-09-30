@@ -15,6 +15,7 @@ import {ZeroState} from '../shared/components/zero-state';
 import {Context} from '../shared/context';
 import {historyUrl} from '../shared/history';
 import {services} from '../shared/services';
+import {useEditableObject} from '../shared/use-editable-object';
 import {useQueryParams} from '../shared/use-query-params';
 import {WidgetGallery} from '../widgets/widget-gallery';
 import {WorkflowDetailsList} from '../workflows/components/workflow-details-list/workflow-details-list';
@@ -33,12 +34,8 @@ export function WorkflowTemplateDetails({history, location, match}: RouteCompone
     const [tab, setTab] = useState<string>(queryParams.get('tab'));
     const [workflows, setWorkflows] = useState<Workflow[]>([]);
     const [columns, setColumns] = useState<models.Column[]>([]);
-
-    const [template, setTemplate] = useState<WorkflowTemplate>();
+    const [template, templateText, lang, edited, onLangChange, setTemplate, resetTemplate] = useEditableObject<WorkflowTemplate>();
     const [error, setError] = useState<Error>();
-    const [edited, setEdited] = useState(false);
-
-    useEffect(() => setEdited(true), [template]);
 
     useEffect(
         useQueryParams(history, p => {
@@ -64,8 +61,7 @@ export function WorkflowTemplateDetails({history, location, match}: RouteCompone
     useEffect(() => {
         services.workflowTemplate
             .get(name, namespace)
-            .then(setTemplate)
-            .then(() => setEdited(false)) // set back to false
+            .then(resetTemplate)
             .then(() => setError(null))
             .catch(setError);
     }, [name, namespace]);
@@ -106,9 +102,8 @@ export function WorkflowTemplateDetails({history, location, match}: RouteCompone
                             action: () =>
                                 services.workflowTemplate
                                     .update(template, name, namespace)
-                                    .then(setTemplate)
+                                    .then(resetTemplate)
                                     .then(() => notifications.show({content: 'Updated', type: NotificationType.Success}))
-                                    .then(() => setEdited(false))
                                     .then(() => setError(null))
                                     .catch(setError)
                         },
@@ -137,7 +132,20 @@ export function WorkflowTemplateDetails({history, location, match}: RouteCompone
             }}>
             <>
                 <ErrorNotice error={error} />
-                {!template ? <Loading /> : <WorkflowTemplateEditor template={template} onChange={setTemplate} onError={setError} onTabSelected={setTab} selectedTabKey={tab} />}
+                {!template ? (
+                    <Loading />
+                ) : (
+                    <WorkflowTemplateEditor
+                        template={template}
+                        templateText={templateText}
+                        lang={lang}
+                        onLangChange={onLangChange}
+                        onChange={setTemplate}
+                        onError={setError}
+                        onTabSelected={setTab}
+                        selectedTabKey={tab}
+                    />
+                )}
             </>
             {template && (
                 <SlidingPanel isShown={!!sidePanel} onClose={() => setSidePanel(null)} isMiddle={sidePanel === 'submit'}>

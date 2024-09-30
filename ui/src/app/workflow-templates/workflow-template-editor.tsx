@@ -5,19 +5,25 @@ import {WorkflowTemplate} from '../../models';
 import {LabelsAndAnnotationsEditor} from '../shared/components/editors/labels-and-annotations-editor';
 import {MetadataEditor} from '../shared/components/editors/metadata-editor';
 import {WorkflowParametersEditor} from '../shared/components/editors/workflow-parameters-editor';
-import {ObjectEditor} from '../shared/components/object-editor';
+import {ObjectEditorPlain} from '../shared/components/object-editor-plain';
 
 export function WorkflowTemplateEditor({
     onChange,
+    onLangChange,
     onError,
     onTabSelected,
     selectedTabKey,
-    template
+    template,
+    templateText,
+    lang
 }: {
     template: WorkflowTemplate;
-    onChange: (template: WorkflowTemplate) => void;
+    templateText: string;
+    lang: string;
+    onChange: (template: string | WorkflowTemplate) => void;
     onError: (error: Error) => void;
     onTabSelected?: (tab: string) => void;
+    onLangChange: (lang: string) => void;
     selectedTabKey?: string;
 }) {
     return (
@@ -30,7 +36,16 @@ export function WorkflowTemplateEditor({
                 {
                     key: 'manifest',
                     title: 'Manifest',
-                    content: <ObjectEditor type='io.argoproj.workflow.v1alpha1.WorkflowTemplate' value={template} onChange={x => onChange({...x})} />
+                    content: (
+                        <ObjectEditorPlain
+                            type='io.argoproj.workflow.v1alpha1.WorkflowTemplate'
+                            value={templateText}
+                            fields={Object.keys(template)}
+                            lang={lang}
+                            onLangChange={onLangChange}
+                            onChange={onChange}
+                        />
+                    )
                 },
                 {
                     key: 'spec',
