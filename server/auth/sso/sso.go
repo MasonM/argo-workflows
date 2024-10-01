@@ -342,13 +342,7 @@ func (s *sso) HandleCallback(w http.ResponseWriter, r *http.Request) {
 	})
 	redirect := s.baseHRef
 
-	proto := "http"
-	if s.secure {
-		proto = "https"
-	}
-	prefix := fmt.Sprintf("%s://%s%s", proto, r.Host, s.baseHRef)
-
-	if strings.HasPrefix(cookie.Value, prefix) {
+	if strings.HasPrefix(cookie.Value, "/") {
 		redirect = cookie.Value
 	}
 	http.Redirect(w, r, redirect, 302)

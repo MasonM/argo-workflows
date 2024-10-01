@@ -11,7 +11,7 @@ function auth(req: SuperAgentRequest) {
 function handle(err: any) {
     // check URL to prevent redirect loop
     if (err.status === 401 && !document.location.href.includes('login')) {
-        document.location.href = uiUrlWithParams('login', ['redirect=' + document.location.href]);
+        document.location.href = uiUrlWithParams('login', ['redirect=' + document.location.pathname]);
     }
 }
 

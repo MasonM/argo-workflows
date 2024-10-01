@@ -20,7 +20,7 @@ function getRedirect(): string {
     if (urlParams.has('redirect')) {
         return 'redirect=' + urlParams.get('redirect');
     }
-    return 'redirect=' + window.location.origin + '/workflows';
+    return 'redirect=/workflows';
 }
 
 export function Login() {
