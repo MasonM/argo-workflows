@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 
@@ -16,26 +17,53 @@ import (
 	"github.com/argoproj/argo-workflows/v3/util/instanceid"
 )
 
-const (
-	numClusters   = 5
-	numNamespaces = 5
-)
+var session db.Session
 
 func main() {
-	var dbtype, dsn, table string
-	var rows int
+	var dbtype, dsn string
+	rootCmd := &cobra.Command{
+		Use:   "db",
+		Short: "CLI for developers to use when working on the DB locally",
+	}
+	rootCmd.PersistentPreRunE = func(cmd *cobra.Command, args []string) (err error) {
+		session, err = createDBSession(dbtype, dsn)
+		return
+	}
+	rootCmd.PersistentFlags().StringVarP(&dbtype, "driver", "d", "postgresql", "Database type (mysql or postgresql)")
+	rootCmd.PersistentFlags().StringVarP(&dsn, "dsn", "c", "postgres://postgres@localhost:5432/postgres", "DSN connection string")
+	rootCmd.AddCommand(NewMigrateCommand())
+	rootCmd.AddCommand(NewFakeDataCommand())
 
-	command := &cobra.Command{
-		Use:   "db-data-generator",
-		Short: "CLI to generate fake/test data and insert it into the database",
-		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			session, err := createDBSession(dbtype, dsn)
-			if err != nil {
-				return
-			}
+	if err := rootCmd.Execute(); err != nil {
+		os.Exit(1)
+	}
+}
 
-			clusters := randomArray(numClusters)
-			namespaces := randomArray(numNamespaces)
+func NewMigrateCommand() *cobra.Command {
+	var cluster, table string
+	migrationCmd := &cobra.Command{
+		Use:   "migrate",
+		Short: "Force DB migration for given cluster/table",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return sqldb.NewMigrate(session, cluster, table).Exec(context.Background())
+		},
+	}
+	migrationCmd.Flags().StringVar(&cluster, "cluster", "default", "Cluster name")
+	migrationCmd.Flags().StringVar(&table, "table", "argo_workflows", "Table name")
+	return migrationCmd
+}
+
+func NewFakeDataCommand() *cobra.Command {
+	var seed, rows, numClusters, numNamespaces int
+	fakeDataCmd := &cobra.Command{
+		Use:   "fake-archived-workflows",
+		Short: "Insert randomly-generated workflows into argo_archived_workflows, for testing purposes",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			rand.Seed(int64(seed))
+			clusters := randomStringArray(numClusters)
+			namespaces := randomStringArray(numNamespaces)
+			fmt.Printf("Using seed %d\nClusters: %v\nNamespaces: %v\n", seed, clusters, namespaces)
+
 			instanceIDService := instanceid.NewService("")
 
 			for i := 0; i < rows; i++ {
@@ -46,20 +74,34 @@ func main() {
 					return err
 				}
 			}
-			fmt.Printf("Rows: %v, Error: %v\n", rows, err)
-			return
+			fmt.Printf("Inserted %d rows\n", rows)
+			return nil
 		},
 	}
-	command.Flags().StringVarP(&dbtype, "driver", "d", "postgresql", "Database type (mysql or postgresql)")
-	command.Flags().StringVarP(&dsn, "dsn", "c", "postgres://postgres@localhost:5432/postgres", "DSN connection string")
-	command.Flags().StringVarP(&table, "table", "t", "argo_archived_workflows", "Table to populate")
-	command.Flags().IntVarP(&rows, "rows", "r", 10, "Number of rows to insert")
-	if err := command.Execute(); err != nil {
-		os.Exit(1)
+	fakeDataCmd.Flags().IntVar(&seed, "seed", rand.Int(), "Random number seed")
+	fakeDataCmd.Flags().IntVar(&rows, "rows", 10, "Number of rows to insert")
+	fakeDataCmd.Flags().IntVar(&numClusters, "clusters", 1, "Number of cluster names to autogenerate")
+	fakeDataCmd.Flags().IntVar(&numNamespaces, "namespaces", 5, "Number of namespaces to autogenerate")
+	return fakeDataCmd
+}
+
+func createDBSession(dbtype, dsn string) (db.Session, error) {
+	if dbtype == "postgresql" {
+		url, err := postgresqladp.ParseURL(dsn)
+		if err != nil {
+			return nil, err
+		}
+		return postgresqladp.Open(url)
+	} else {
+		url, err := mysqladp.ParseURL(dsn)
+		if err != nil {
+			return nil, err
+		}
+		return mysqladp.Open(url)
 	}
 }
 
-func randomArray(length int) []string {
+func randomStringArray(length int) []string {
 	var result []string
 	for i := 0; i < length; i++ {
 		result = append(result, rand.String(rand.IntnRange(5, 20)))
@@ -67,7 +109,7 @@ func randomArray(length int) []string {
 	return result
 }
 
-var wfTmpl = `apiVersion: argoproj.io/v1alpha1
+const wfTmpl = `apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
   name: %s
@@ -105,20 +147,4 @@ func randomWorkflow(namespaces []string) *wfv1.Workflow {
 		randomPhase(),
 	)
 	return wfv1.MustUnmarshalWorkflow(wfString)
-}
-
-func createDBSession(dbtype, dsn string) (db.Session, error) {
-	if dbtype == "postgresql" {
-		url, err := postgresqladp.ParseURL(dsn)
-		if err != nil {
-			return nil, err
-		}
-		return postgresqladp.Open(url)
-	} else {
-		url, err := mysqladp.ParseURL(dsn)
-		if err != nil {
-			return nil, err
-		}
-		return mysqladp.Open(url)
-	}
 }
