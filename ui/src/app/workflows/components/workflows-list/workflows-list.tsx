@@ -138,7 +138,7 @@ export function WorkflowsList({match, location, history}: RouteComponentProps<an
         }
 
         // Add any workflow parameters to the query
-        const workflowProperties = getWorkflowParametersFromQuery();
+        const workflowProperties = getWorkflowParametersFromQuery(history);
         console.log(workflowProperties);
         Object.keys(workflowProperties).forEach(key => {
             params.append(`parameters[${key}]`, workflowProperties[key]);
@@ -364,6 +364,7 @@ export function WorkflowsList({match, location, history}: RouteComponentProps<an
                     <WorkflowCreator
                         namespace={nsUtils.getNamespaceWithDefault(namespace)}
                         onCreate={wf => navigation.goto(uiUrl(`workflows/${wf.metadata.namespace}/${wf.metadata.name}`))}
+                        history={history}
                     />
                 )}
             </SlidingPanel>

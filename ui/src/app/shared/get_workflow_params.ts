@@ -1,3 +1,5 @@
+import {History} from 'history';
+
 /**
  * Method to extract a key from query parameter. The query parameter will be of the following format
  * ?parameters[key]=value.
@@ -18,9 +20,8 @@ function extractKey(inputString: string): string | null {
     return null; // Or return '';
 }
 
-export function getWorkflowParametersFromQuery(): {[key: string]: string} {
-    const queryParams = new URLSearchParams(location.search);
-
+export function getWorkflowParametersFromQuery(history: History): {[key: string]: string} {
+    const queryParams = new URLSearchParams(history.location.search);
     const parameters: {[key: string]: string} = {};
     for (const [key, value] of queryParams.entries()) {
         const q = extractKey(key);

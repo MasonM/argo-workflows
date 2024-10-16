@@ -1,13 +1,13 @@
 import {Select} from 'argo-ui/src/components/select/select';
+import {History} from 'history';
 import * as React from 'react';
 import {useEffect, useState} from 'react';
 
-import {Parameter, Workflow, WorkflowTemplate} from '../../../models';
+import {Workflow, WorkflowTemplate} from '../../../models';
 import {Button} from '../../shared/components/button';
 import {ErrorNotice} from '../../shared/components/error-notice';
 import {ExampleManifests} from '../../shared/components/example-manifests';
 import {UploadButton} from '../../shared/components/upload-button';
-import {getWorkflowParametersFromQuery} from '../../shared/get_workflow_params';
 import {exampleWorkflow} from '../../shared/examples';
 import {services} from '../../shared/services';
 import * as nsUtils from '../../shared/namespaces';
@@ -16,14 +16,12 @@ import {WorkflowEditor} from './workflow-editor';
 
 type Stage = 'choose-method' | 'submit-workflow' | 'full-editor';
 
-export function WorkflowCreator({namespace, onCreate}: {namespace: string; onCreate: (workflow: Workflow) => void}) {
+export function WorkflowCreator({namespace, onCreate, history}: {namespace: string; onCreate: (workflow: Workflow) => void, history: History}) {
     const [workflowTemplates, setWorkflowTemplates] = useState<WorkflowTemplate[]>();
     const [workflowTemplate, setWorkflowTemplate] = useState<WorkflowTemplate>();
     const [stage, setStage] = useState<Stage>('choose-method');
     const [workflow, setWorkflow] = useState<Workflow>();
     const [error, setError] = useState<Error>();
-    const queryParams = new URLSearchParams(location.search);
-    const template = queryParams.get('template');
     useEffect(() => {
         services.workflowTemplate
             .list(namespace, [])
@@ -64,46 +62,10 @@ export function WorkflowCreator({namespace, onCreate}: {namespace: string; onCre
     }, [workflowTemplate]);
 
     useEffect(() => {
-        if (template != null && workflowTemplates) {
-            // Fetch matching template from the list of templates
-            const workflowTemplate = workflowTemplates.find(tmpl => tmpl.metadata.name === template);
-            // If we have a matching template set default values.
-            if (workflowTemplate) {
-                setWorkflowTemplate(workflowTemplate);
-
-                const templatePropertiesInQuery = getWorkflowParametersFromQuery();
-                // Get the user arguments from the query params
-                const updatedParams = workflowTemplate.spec.arguments.parameters.map(param => {
-                    const queryValue = templatePropertiesInQuery[param.name];
-                    const p: Parameter = {
-                        name: param.name,
-                        value: queryValue || param.value
-                    };
-                    return p;
-                });
-
-                workflowTemplate.spec.arguments.parameters = updatedParams;
-
-                setWorkflow({
-                    metadata: {
-                        generateName: workflowTemplate.metadata.name + '-',
-                        namespace,
-                        labels: {
-                            'workflows.argoproj.io/workflow-template': workflowTemplate.metadata.name,
-                            'submit-from-ui': 'true'
-                        }
-                    },
-                    spec: {
-                        entrypoint: workflowTemplate.spec.entrypoint,
-                        arguments: {
-                            ...workflowTemplate.spec.arguments,
-                            parameters: updatedParams
-                        }
-                    }
-                });
-            }
-        }
-    }, [template, workflowTemplates]);
+        const queryParams = new URLSearchParams(history.location.search);
+        const template = queryParams.get('template');
+        setWorkflowTemplate((workflowTemplates || []).find(tpl => tpl.metadata.name === template));
+    }, [workflowTemplates, setWorkflowTemplate, history]);
 
     return (
         <>
@@ -136,6 +98,7 @@ export function WorkflowCreator({namespace, onCreate}: {namespace: string; onCre
                         entrypoint={workflowTemplate.spec.entrypoint}
                         templates={workflowTemplate.spec.templates || []}
                         workflowParameters={workflowTemplate.spec.arguments.parameters || []}
+                        history={history}
                     />
                     <a onClick={() => setStage('full-editor')}>
                         Edit using full workflow options <i className='fa fa-caret-right' />

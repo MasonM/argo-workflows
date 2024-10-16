@@ -1,13 +1,15 @@
 import {Select} from 'argo-ui/src/components/select/select';
-import React, {useContext, useMemo, useState} from 'react';
+import React, {useContext, useEffect, useMemo, useState} from 'react';
 
 import {Parameter, Template} from '../../../models';
 import {Context} from '../../shared/context';
 import {uiUrl} from '../../shared/base';
 import {ErrorNotice} from '../../shared/components/error-notice';
+import {getWorkflowParametersFromQuery} from '../../shared/get_workflow_params';
 import {getValueFromParameter, ParametersInput} from '../../shared/components/parameters-input';
 import {TagsInput} from '../../shared/components/tags-input/tags-input';
 import {services} from '../../shared/services';
+import {History} from 'history';
 
 interface Props {
     kind: string;
@@ -16,6 +18,7 @@ interface Props {
     entrypoint: string;
     templates: Template[];
     workflowParameters: Parameter[];
+    history: History;
 }
 
 const workflowEntrypoint = '<default>';
@@ -34,6 +37,20 @@ export function SubmitWorkflowPanel(props: Props) {
     const [labels, setLabels] = useState(['submit-from-ui=true']);
     const [error, setError] = useState<Error>();
     const [isSubmitting, setIsSubmitting] = useState(false);
+    useEffect(() => {
+        const templatePropertiesInQuery = getWorkflowParametersFromQuery(props.history);
+        // Get the user arguments from the query params
+        const updatedParams = workflowParameters.map(param => {
+            const queryValue = templatePropertiesInQuery[param.name];
+            const p: Parameter = {
+                name: param.name,
+                value: queryValue || param.value
+            };
+            return p;
+        });
+
+        setWorkflowParameters(updatedParams);
+    }, [props.history, setWorkflowParameters]);
 
     const templates = useMemo(() => {
         return [defaultTemplate].concat(props.templates);
