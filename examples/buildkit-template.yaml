@@ -154,6 +154,8 @@ spec:
             value: --oci-worker-no-process-sandbox
           - name: DOCKER_CONFIG
             value: /.docker
+          - name: IMAGE
+            value: "{{inputs.parameters.image}}"
         command:
           - buildctl-daemonless.sh
         args:
@@ -166,6 +168,3 @@ spec:
           - dockerfile=.
           - --output
           - type=image,name=docker.io/$(IMAGE),push=true
-        env:
-        - name: IMAGE
-          value: "{{inputs.parameters.image}}"

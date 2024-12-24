@@ -36,7 +36,7 @@ spec:
       - name: message
     container:
       image: alpine:latest
-      command: ["echo", "result was: $(MESSAGE)"]
+      command: ["printenv", "MESSAGE"]
       env:
       - name: MESSAGE
-        value: "{{inputs.parameters.message}}"
+        value: "result was {{inputs.parameters.message}}"

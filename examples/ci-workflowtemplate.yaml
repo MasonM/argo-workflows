@@ -122,7 +122,7 @@ spec:
         command: [ sh, -euxc ]
         args:
           - |
-            git clone -v -b "$(BRANCH)" --single-branch --depth 1 https://github.com/golang/example.git .
+            git clone -v -b "$BRANCH" --single-branch --depth 1 https://github.com/golang/example.git .
         env:
           - name: BRANCH
             value: "{{workflow.parameters.branch}}"

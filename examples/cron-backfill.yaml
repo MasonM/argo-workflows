@@ -20,13 +20,14 @@ spec:
         image: busybox
         command:
           - sh
-        # FIXME
         source: |
-          date="{{inputs.parameters.date}}"
           if [ $date = yesterday ]; then
             date=$(date -d yesterday +%Y-%m-%d)
           fi
           echo "run for $date"
+        env:
+          - name: date
+            value: "{{inputs.parameters.date}}"
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: CronWorkflow

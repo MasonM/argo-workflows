@@ -44,7 +44,7 @@ spec:
       env:
         - name: OUTPUT_TEXT_PATH
           value: "{{outputs.artifacts.text.path}}"
-        - name: OUTPUT_ACTUAL_LINES_COUNT_PATH 
+        - name: OUTPUT_ACTUAL_LINES_COUNT_PATH
           value: "{{outputs.parameters.actual-lines-count.path}}"
         - name: INPUT_TEXT_PATH
           value: "{{inputs.artifacts.text.path}}"

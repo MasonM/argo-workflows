@@ -19,7 +19,7 @@ spec:
       - name: message
     container:
       image: busybox
-      command: ["echo", "$(MESSAGE)"]
+      command: ["printenv", "MESSAGE"]
       env:
       - name: MESSAGE
         value: "{{inputs.parameters.message}}"
