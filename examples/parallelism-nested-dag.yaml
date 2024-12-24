@@ -84,4 +84,7 @@ spec:
     container:
       image: alpine
       command: ['/bin/sh', '-c']
-      args: ["echo {{inputs.parameters.msg}}; sleep 10"]
+      args: ['echo "$MSG"; sleep 10']
+      env:
+      - name: MSG
+        value: "{{inputs.parameters.msg}}"

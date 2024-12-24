@@ -60,4 +60,7 @@ spec:
     container:
       image: alpine
       command: ['/bin/sh', '-c']
-      args: ["echo {{inputs.parameters.parallel-id}} {{inputs.parameters.seq-id}}; sleep 10"]
+      args: ['echo "$MSG"; sleep 10']
+      env:
+      - name: MSG
+        value: "{{inputs.parameters.parallel-id}} {{inputs.parameters.seq-id}}"

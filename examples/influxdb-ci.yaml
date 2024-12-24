@@ -168,6 +168,7 @@ spec:
         arguments:
           parameters:
           - name: cmd
+            # FIXME
             value: for i in $(seq 1 20); do curl -XPOST 'http://{{steps.influxdb-server.ip}}:8086/write?db=mydb' -d "cpu,host=server01,region=uswest load=$i" ; sleep .5 ; done
       - name: producer2
         template: influxdb-client

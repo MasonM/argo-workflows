@@ -56,8 +56,10 @@ spec:
           value: "{{workflow.outputs.parameters.my-global-param}}"
     container:
       image: alpine:3.7
-      command: [sh, -c]
-      args: ["echo {{inputs.parameters.param}}"]
+      command: [printenv, PARAM]
+      env:
+      - name: PARAM
+        value: "{{inputs.parameters.param}}"
 
   - name: consume-global-art
     inputs:

@@ -57,11 +57,14 @@ spec:
           import os
           import sys
           os.mkdir("/mnt/out")
-          partIds = list(map(lambda x: str(x), range({{inputs.parameters.numParts}})))
+          partIds = list(map(lambda x: str(x), range(os.environ['NUM_PARTS'])))
           for i, partId in enumerate(partIds, start=1):
             with open("/mnt/out/" + partId + ".json", "w") as f:
               json.dump({"foo": i}, f)
           json.dump(partIds, sys.stdout)
+        env:
+          - name: NUM_PARTS
+            value: "{{inputs.parameters.numParts}}"
       outputs:
         artifacts:
           - name: parts

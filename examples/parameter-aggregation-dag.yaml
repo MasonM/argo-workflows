@@ -64,12 +64,15 @@ spec:
       args:
       - |
         sleep 1 &&
-        echo {{inputs.parameters.num}} > /tmp/num &&
-        if [ $(({{inputs.parameters.num}}%2)) -eq 0 ]; then
+        echo "$NUM" > /tmp/num &&
+        if [ $(($NUM % 2)) -eq 0 ]; then
           echo "even" > /tmp/even;
         else
           echo "odd" > /tmp/even;
         fi
+      env:
+      - name: NUM
+        value: "{{inputs.parameters.num}}"
     outputs:
       parameters:
       - name: num
@@ -86,9 +89,10 @@ spec:
       - name: num
     container:
       image: alpine:latest
-      command: [sh, -c]
-      args:
-        - echo $(({{inputs.parameters.num}}/2))
+      command: [sh, -c, 'expr "$NUM" / 2']
+      env:
+      - name: NUM
+        value: "{{inputs.parameters.num}}"
 
   # print-message prints a number
   - name: print-message
@@ -97,5 +101,7 @@ spec:
       - name: message
     container:
       image: busybox
-      command: [echo]
-      args: ["{{inputs.parameters.message}}"]
+      command: [printenv, MESSAGE]
+      env:
+      - name: MESSAGE
+        value: "{{inputs.parameters.message}}"

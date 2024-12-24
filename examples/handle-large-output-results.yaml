@@ -52,4 +52,7 @@ spec:
         image: stedolan/jq:latest
         command: [sh, -c]
         # jq is just one way to get the appropriate item.
-        args: ["cat /tmp/items | jq '.[{{inputs.parameters.index}}]'"]
+        args: ['cat /tmp/items | jq "$JQ_EXPR"']
+        env:
+          - name: JQ_EXPR
+            value: ".[{{inputs.parameters.index}}]"

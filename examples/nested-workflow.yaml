@@ -88,8 +88,11 @@ spec:
     container:
       image: alpine:3.7
       command: [sh, -c]
-      args: ["
-        echo 'input parameter value: {{inputs.parameters.in-parameter}}' &&
-        echo 'input artifact contents:' &&
+      args: ['
+        echo "input parameter value: $IN_PARAMETER" &&
+        echo "input artifact contents:" &&
         cat /tmp/art
-      "]
+      ']
+      env:
+      - name: IN_PARAMETER
+        value: "{{inputs.parameters.in-parameter}}"

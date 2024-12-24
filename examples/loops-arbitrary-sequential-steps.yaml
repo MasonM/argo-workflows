@@ -46,4 +46,9 @@ spec:
       container:
         image: alpine
         command: [ '/bin/sh', '-c' ]
-        args: [ "echo {{inputs.parameters.message}}; exit {{inputs.parameters.exit_code}}" ]
+        args: [ 'echo "$MESSAGE"; exit "$EXIT_CODE"' ]
+        env:
+        - name: MESSAGE
+          value: "{{inputs.parameters.message}}"
+        - name: EXIT_CODE
+          value: "{{inputs.parameters.exit_code}}"

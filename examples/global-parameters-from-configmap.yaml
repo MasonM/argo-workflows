@@ -23,5 +23,7 @@ spec:
   - name: print-message
     container:
       image: busybox
-      command: ["echo"]
-      args: ["{{workflow.parameters.message}}"]
+      command: [printenv, MESSAGE]
+      env:
+      - name: MESSAGE
+        value: "{{inputs.parameters.message}}"

@@ -49,4 +49,7 @@ spec:
     container:
       image: alpine
       command: ['/bin/sh', '-c']
-      args: ["echo {{inputs.parameters.seq-id}}; sleep 30"]
+      args: ['echo "$SEQ_ID"; sleep 30']
+      env:
+      - name: SEQ_ID
+        value: "{{inputs.parameters.seq-id}}"
