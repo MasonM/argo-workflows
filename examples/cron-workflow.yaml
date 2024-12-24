@@ -17,4 +17,5 @@ spec:
         container:
           image: busybox
           command: [echo]
+          # FIXME
           args: ["🕓 hello world. Scheduled on: {{workflow.scheduledTime}}"]

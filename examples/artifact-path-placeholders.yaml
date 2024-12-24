@@ -35,6 +35,18 @@ spec:
       artifacts:
       - name: text
         path: /outputs/text/data
-    container:
+    script:
       image: busybox
-      command: [sh, -c, 'mkdir -p "$(dirname "{{outputs.artifacts.text.path}}")" "$(dirname "{{outputs.parameters.actual-lines-count.path}}")" ; head -n {{inputs.parameters.lines-count}} < "{{inputs.artifacts.text.path}}" | tee "{{outputs.artifacts.text.path}}" | wc -l > "{{outputs.parameters.actual-lines-count.path}}"']
+      command: [sh, -c]
+      source: |
+        mkdir -p "$(dirname $OUTPUT_TEXT_PATH)" "$(dirname $OUTPUT_ACTUAL_LINES_COUNT_PATH)"
+        head -n "$INPUT_LINES_COUNT" < "$INPUT_TEXT_PATH" | tee "$OUTPUT_TEXT_PATH" | wc -l > "$OUTPUT_ACTUAL_LINES_COUNT_PATH"
+      env:
+        - name: OUTPUT_TEXT_PATH
+          value: "{{outputs.artifacts.text.path}}"
+        - name: OUTPUT_ACTUAL_LINES_COUNT_PATH 
+          value: "{{outputs.parameters.actual-lines-count.path}}"
+        - name: INPUT_TEXT_PATH
+          value: "{{inputs.artifacts.text.path}}"
+        - name: INPUT_LINES_COUNT
+          value: "{{inputs.parameters.lines-count}}"

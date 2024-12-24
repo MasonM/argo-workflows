@@ -25,5 +25,8 @@ spec:
             key: msg
     container:
       image: busybox
-      command: ["echo"]
-      args: ["{{inputs.parameters.message}}"]
+      command: ["echo", "$(MESSAGE)"]
+      env:
+      - name: MESSAGE
+        value: "{{inputs.parameters.message}}"
+

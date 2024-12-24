@@ -61,4 +61,5 @@ spec:
     container:
       image: appropriate/curl:latest
       command: ["sh", "-c"]
+      # FIXME
       args: ["{{inputs.parameters.cmd}}"]

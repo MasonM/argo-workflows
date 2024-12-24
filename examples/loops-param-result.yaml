@@ -35,4 +35,7 @@ spec:
     container:
       image: alpine:latest
       command: [sh, -c]
-      args: ["echo sleeping for {{inputs.parameters.seconds}} seconds; sleep {{inputs.parameters.seconds}}; echo done"]
+      args: ["echo sleeping for $SECONDS seconds; sleep $SECONDS; echo done"]
+      env:
+      - name: SECONDS
+        value: "{{inputs.parameters.seconds}}"

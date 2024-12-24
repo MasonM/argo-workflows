@@ -96,10 +96,15 @@ spec:
           - --depth
           - "1"
           - --branch
-          - "{{inputs.parameters.branch}}"
+          - "$(BRANCH)"
           - --single-branch
-          - "{{inputs.parameters.repo}}"
+          - "$(REPO)"
           - .
+        env:
+        - name: BRANCH
+          value: "{{inputs.parameters.branch}}"
+        - name: REPO
+          value: "{{inputs.parameters.repo}}"
     - name: build
       inputs:
         parameters:
@@ -160,4 +165,7 @@ spec:
           - --local
           - dockerfile=.
           - --output
-          - type=image,name=docker.io/{{inputs.parameters.image}},push=true
+          - type=image,name=docker.io/$(IMAGE),push=true
+        env:
+        - name: IMAGE
+          value: "{{inputs.parameters.image}}"
