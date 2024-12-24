@@ -15,43 +15,48 @@ spec:
         template: influxdb
 
       - name: init-database
-        template: influxdb-client
+        template: init-database
         depends: "influx"
         arguments:
           parameters:
-          # FIXME
-          - name: cmd
-            value: curl -XPOST 'http://{{tasks.influx.ip}}:8086/query' --data-urlencode "q=CREATE DATABASE mydb"
+            - name: influx_ip
+              value: "{{tasks.influx.ip}}"
 
       - name: producer-1
-        template: influxdb-client
+        template: producer
         depends: "init-database"
         arguments:
           parameters:
-          - name: cmd
-            value: for i in $(seq 1 20); do curl -XPOST 'http://{{tasks.influx.ip}}:8086/write?db=mydb' -d "cpu,host=server01,region=uswest load=$i" ; sleep .5 ; done
+            - name: influx_ip
+              value: "{{tasks.influx.ip}}"
+            - name: server
+              value: server01
       - name: producer-2
-        template: influxdb-client
+        template: producer
         depends: "init-database"
         arguments:
           parameters:
-          - name: cmd
-            value: for i in $(seq 1 20); do curl -XPOST 'http://{{tasks.influx.ip}}:8086/write?db=mydb' -d "cpu,host=server02,region=uswest load=$((RANDOM % 100))" ; sleep .5 ; done
+            - name: influx_ip
+              value: "{{tasks.influx.ip}}"
+            - name: server
+              value: server02
       - name: producer-3
-        template: influxdb-client
+        template: producer
         depends: "init-database"
         arguments:
           parameters:
-          - name: cmd
-            value: curl -XPOST 'http://{{tasks.influx.ip}}:8086/write?db=mydb' -d 'cpu,host=server03,region=useast load=15.4'
+            - name: influx_ip
+              value: "{{tasks.influx.ip}}"
+            - name: server
+              value: server03
 
       - name: consumer
-        template: influxdb-client
+        template: consumer
         depends: "producer-1 && producer-2 && producer-3"
         arguments:
           parameters:
-          - name: cmd
-            value: curl --silent -G http://{{tasks.influx.ip}}:8086/query?pretty=true --data-urlencode "db=mydb" --data-urlencode "q=SELECT * FROM cpu"
+            - name: influx_ip
+              value: "{{tasks.influx.ip}}"
 
   - name: influxdb
     daemon: true
@@ -64,12 +69,39 @@ spec:
         initialDelaySeconds: 5
         timeoutSeconds: 1
 
-  - name: influxdb-client
+  - name: init-database
     inputs:
       parameters:
-      - name: cmd
+        - name: influx_ip
+    hostAliases:
+    - ip: "{{inputs.parameters.influx_ip}}"
+      hostnames: [influx.local]
     container:
       image: appropriate/curl:latest
-      command: ["sh", "-c"]
-      # FIXME
-      args: ["{{inputs.parameters.cmd}}"]
+      args: ["-XPOST", "http://influx.local:8086/query", "--data-urlencode", "q=CREATE DATABASE mydb"]
+
+  - name: producer
+    inputs:
+      parameters:
+        - name: influx_ip
+        - name: server
+    hostAliases:
+    - ip: "{{inputs.parameters.influx_ip}}"
+      hostnames: [influx.local]
+    container:
+      image: appropriate/curl:latest
+      command: [sh, -c, 'for i in $(seq 1 20); do curl -XPOST "http://influx.local:8086/write?db=mydb" -d "cpu,host=$SERVER,region=uswest load=$i" ; sleep .5 ; done']
+      env:
+        - name: SERVER
+          value: "{{inputs.parameters.server}}"
+
+  - name: consumer
+    inputs:
+      parameters:
+        - name: influx_ip
+    hostAliases:
+    - ip: "{{inputs.parameters.influx_ip}}"
+      hostnames: [influx.local]
+    container:
+      image: appropriate/curl:latest
+      args: ["--silent", "-G", "http://influx.local:8086/query?pretty=true", "--data-urlencode", "db=mydb", "--data-urlencode", "q=SELECT * FROM cpu"]
