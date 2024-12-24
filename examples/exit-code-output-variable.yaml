@@ -30,5 +30,7 @@ spec:
         - name: exitCode
       container:
         image: alpine:3.6
-        command: [sh, -c]
-        args: ["echo \"Exit code was: {{inputs.parameters.exitCode}}\""]
+        command: [printenv, MESSAGE]
+        env:
+        - name: MESSAGE
+          value: "Exit code was: {{inputs.parameters.exitCode}}"

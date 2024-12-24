@@ -98,9 +98,8 @@ spec:
               parameter: "{{steps.add.outputs.result}}"
     - name: return-1
       script:
-        image: python:alpine3.6
-        command: [ python ]
-        source: print(1)
+        image: busybox
+        command: [ echo, "1" ]
 
     - name: do-math
       inputs:
@@ -109,10 +108,15 @@ spec:
           - name: op
           - name: b
       script:
-        image: python:alpine3.6
-        command: [ python ]
-        source: |
-          print({{inputs.parameters.a}} {{inputs.parameters.op}} {{inputs.parameters.b}})
+        image: busybox
+        command: [ sh, -xc, 'expr "$A" "$OP" "$B"' ]
+        env:
+          - name: A
+            value: "{{inputs.parameters.a}}"
+          - name: OP
+            value: "{{inputs.parameters.op}}"
+          - name: B
+            value: "{{inputs.parameters.b}}"
 
     - name: printresult
       inputs:
@@ -120,5 +124,7 @@ spec:
           - name: result
       container:
         image: alpine:latest
-        command: [ sh, -c ]
-        args: [ "echo {{inputs.parameters.result}}" ]
+        command: [printenv, RESULT]
+        env:
+        - name: RESULT
+          value: "{{inputs.parameters.result}}"

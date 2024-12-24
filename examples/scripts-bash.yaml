@@ -40,3 +40,11 @@ spec:
       env:
       - name: MESSAGE
         value: "result was {{inputs.parameters.message}}"
+      source: |
+        if [ $date = yesterday ]; then
+          date=$(date -d yesterday +%Y-%m-%d)
+        fi
+        echo "run for $date"
+      env:
+        - name: date
+          value: "{{inputs.parameters.date}}"

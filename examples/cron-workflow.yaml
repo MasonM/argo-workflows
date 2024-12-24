@@ -16,6 +16,7 @@ spec:
       - name: hello-world-with-time
         container:
           image: busybox
-          command: [echo]
-          # FIXME
-          args: ["🕓 hello world. Scheduled on: {{workflow.scheduledTime}}"]
+          command: ["printenv", "MESSAGE"]
+          env:
+            - name: MESSAGE
+              value: "🕓 hello world. Scheduled on: {{workflow.scheduledTime}}"

@@ -64,4 +64,7 @@ spec:
       - name: message
     container:
       image: alpine:3.7
-      command: [echo, "{{inputs.parameters.message}}"]
+      command: [printenv, MESSAGE]
+      env:
+      - name: MESSAGE
+        value: "{{inputs.parameters.message}}"

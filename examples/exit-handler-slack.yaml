@@ -1,7 +1,7 @@
 # This example shows how to hit a slack webhook on an exit handler.
 # In order to configure, create a slack app and get a webhook url for it.
 # The documentation to do so is here: https://api.slack.com/messaging/webhooks
-# Replace YOUR_WEBHOOK_URL_HERE on line 36 with that webhook url
+# Replace YOUR_WEBHOOK_URL_HERE on line 23 with that webhook url
 apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
@@ -19,19 +19,20 @@ spec:
   - name: exit-handler
     container:
       image: curlimages/curl
-      command: [sh, -c]
-      args: [
-        "curl -X POST --data-urlencode 'payload={
-          \"text\": \"{{workflow.name}} finished\",
-          \"blocks\": [
-            {
-              \"type\": \"section\",
-              \"text\": {
-                \"type\": \"mrkdwn\",
-                \"text\": \"Workflow {{workflow.name}} {{workflow.status}}\",
+      command: [sh, -xc]
+      args: ['curl -X POST --data-urlencode "payload=$PAYLOAD" YOUR_WEBHOOK_URL_HERE']
+      env:
+      - name: PAYLOAD
+        value: |
+          {
+            "text": "{{workflow.name}} finished",
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "Workflow {{workflow.name}} {{workflow.status}}",
+                }
               }
-            }
-          ]
-        }'
-        YOUR_WEBHOOK_URL_HERE"
-      ]
+            ]
+          }

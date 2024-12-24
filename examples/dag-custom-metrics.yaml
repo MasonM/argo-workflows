@@ -100,5 +100,7 @@ spec:
             value: "1"
     container:
       image: alpine:3.7
-      # FIXME
-      command: [echo, "{{inputs.parameters.message}}"]
+      command: ["printenv", "MESSAGE"]
+      env:
+      - name: MESSAGE
+        value: "{{inputs.parameters.message}}"

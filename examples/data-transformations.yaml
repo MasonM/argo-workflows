@@ -55,7 +55,10 @@ spec:
         command: [ sh, -c ]
         args:
           - |
-            echo {{inputs.parameters.file-name}}
+            echo $FILE_NAME
             head /file
+        env:
+          - name: FILE_NAME
+            value: "{{inputs.parameters.file-name}}"
 
 

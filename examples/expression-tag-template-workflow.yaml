@@ -27,13 +27,12 @@ spec:
           - name: foo
       container:
         image: argoproj/argosay:v2
-        # in this example, we use `asInt` to cast a parameter (which are ALWAYS strings) to an int so we can
-        # multiple by 10
-        args:
-          - echo
-          - |
-            hello {{=asInt(inputs.parameters.foo) * 10}} @ {{=sprig.date('2006', workflow.creationTimestamp)}}
-          - /output
+        command: ["sh", "-c", "printenv MESSAGE > /output"]
+        env:
+        - name: MESSAGE
+          # in this example, we use `asInt` to cast a parameter (which are ALWAYS strings) to an int so we can
+          # multiple by 10
+          value: "hello {{=asInt(inputs.parameters.foo) * 10}} @ {{=sprig.date('2006', workflow.creationTimestamp)}}"
       outputs:
         parameters:
           - name: output

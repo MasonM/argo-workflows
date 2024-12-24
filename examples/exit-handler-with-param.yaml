@@ -25,8 +25,8 @@ spec:
     
     - name: output
       container:
-        image: python:alpine3.6
-        command: [sh, -c]
+        image: busybox
+        command: [echo, -c]
         args: ["echo -n hello world > /tmp/hello_world.txt"]
       outputs:
         parameters:
@@ -40,7 +40,8 @@ spec:
         parameters:
           - name: message
       script:
-        image: python:alpine3.6
-        command: [ python ]
-        source: |
-          print("{{inputs.parameters.message}}")
+        image: busybox
+        command: [printenv, MESSAGE]
+        env:
+        - name: MESSAGE
+          value: "{{inputs.parameters.message}}"
