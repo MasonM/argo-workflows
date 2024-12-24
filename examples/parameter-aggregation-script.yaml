@@ -33,13 +33,16 @@ spec:
       image: python:alpine3.6
       command: [python]
       source: |
-        import json
-        i = {{inputs.parameters.num}}
+        import json, os
+        i = int(os.environ['NUM'])
         res = {
           "num": i,
           "evenness": "even" if i % 2 == 0 else "odd"
         }
         print(json.dumps(res))
+      env:
+      - name: NUM
+        value: "{{inputs.parameters.num}}"
 
   # divide-by-2 divides a number in half
   - name: divide-by-2
@@ -48,7 +51,7 @@ spec:
       - name: num
     script:
       image: alpine:latest
-      command: [sh, -x]
-      source: |
-        echo $(({{inputs.parameters.num}}/2))
-
+      command: [sh, -c, 'expr "$NUM" / 2']
+      env:
+      - name: NUM
+        value: "{{inputs.parameters.num}}"

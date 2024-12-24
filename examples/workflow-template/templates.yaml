@@ -11,8 +11,10 @@ spec:
       - name: message
     container:
       image: busybox
-      command: [echo]
-      args: ["{{inputs.parameters.message}}"]
+      command: [printenv, MESSAGE]
+      env:
+      - name: MESSAGE
+        value: "{{inputs.parameters.message}}"
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
@@ -41,8 +43,10 @@ spec:
       - name: message
     container:
       image: busybox
-      command: [echo]
-      args: ["{{inputs.parameters.message}}"]
+      command: [printenv, MESSAGE]
+      env:
+      - name: MESSAGE
+        value: "{{inputs.parameters.message}}"
   - name: inner-steps
     steps:
     - - name: inner-hello1
@@ -87,8 +91,10 @@ spec:
       - name: message
     container:
       image: busybox
-      command: [echo]
-      args: ["{{inputs.parameters.message}}"]
+      command: [printenv, MESSAGE]
+      env:
+      - name: MESSAGE
+        value: "{{inputs.parameters.message}}"
   - name: inner-diamond
     dag:
       tasks:
@@ -141,5 +147,7 @@ spec:
           - name: message
       container:
         image: busybox
-        command: [echo]
-        args: ["{{inputs.parameters.message}}"]
+        command: [printenv, MESSAGE]
+        env:
+        - name: MESSAGE
+          value: "{{inputs.parameters.message}}"

@@ -21,4 +21,7 @@ spec:
       image: python:alpine3.6
       command: [python, -c]
       # fail with a 66% probability
-      args: ["import random; import sys; print('retries: {{retries}}'); exit_code = random.choice([0, 1, 1]); sys.exit(exit_code)"]
+      args: ["import os,random,sys; print('retries:', os.environ['RETRIES']); exit_code = random.choice([0, 1, 1]); sys.exit(exit_code)"]
+      env:
+      - name: RETRIES
+        value: "{{retries}}"

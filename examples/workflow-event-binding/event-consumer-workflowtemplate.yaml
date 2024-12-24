@@ -26,5 +26,8 @@ spec:
           - name: salutation
           - name: appellation
       container:
-        image: argoproj/argosay:v2
-        args: [ echo, "{{inputs.parameters.salutation}} {{inputs.parameters.appellation}}" ]
+        image: busybox
+        command: [printenv, MESSAGE]
+        env:
+        - name: MESSAGE
+          value: "{{inputs.parameters.salutation}} {{inputs.parameters.appellation}}"

@@ -42,8 +42,9 @@ spec:
       inputs:
         parameters:
           - name: counter
-      script:
-        image: python:alpine3.6
-        command: [python]
-        source: |
-          print({{inputs.parameters.counter}} + 1)
+      container:
+        image: busybox
+        command: [sh, -c, 'expr "$COUNTER" + 1']
+        env:
+        - name: COUNTER
+          value: "{{inputs.parameters.counter}}"

@@ -30,21 +30,16 @@ spec:
       containerSet:
         containers:
           - name: main
-            image: python:alpine3.6
-            command:
-              - python
-              - -c
-            args:
-              - |
-                print("hi")
+            image: busybox
+            command: [echo, hi]
 
     - name: verify
       inputs:
         parameters:
           - name: x
       script:
-        image: python:alpine3.6
-        command:
-          - python
-        source: |
-          assert "{{inputs.parameters.x}}" == "hi"
+        image: busybox
+        command: [sh, -xc, 'test "$X" = "hi"']
+        env:
+        - name: X
+          value: "{{inputs.parameters.x}}"

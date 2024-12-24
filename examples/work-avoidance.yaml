@@ -68,7 +68,7 @@ spec:
           - sh
           - -eux
         source: |
-          marker=/work/markers/$(date +%Y-%m-%d)-echo-{{inputs.parameters.num}}
+          marker="/work/markers/$(date +%Y-%m-%d)-echo-$NUM"
           if [ -e  ${marker} ]; then
             echo "work already done"
             exit 0
@@ -80,6 +80,9 @@ spec:
             exit 1
           fi
           touch ${marker}
+        env:
+          - name: NUM
+            value: "{{inputs.parameters.num}}"
         volumeMounts:
           - name: work
             mountPath: /work
