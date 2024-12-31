@@ -555,7 +555,7 @@ func (s ShutdownStrategy) ShouldExecute(isOnExitPod bool) bool {
 }
 
 type ParallelSteps struct {
-	Steps []WorkflowStep `json:"-" protobuf:"bytes,1,rep,name=steps"`
+	Steps []WorkflowStep `json:"steps" protobuf:"bytes,1,rep,name=steps"`
 }
 
 // WorkflowStep is an anonymous list inside of ParallelSteps (i.e. it does not have a key), so it needs its own
@@ -635,7 +635,7 @@ type Template struct {
 	Daemon *bool `json:"daemon,omitempty" protobuf:"bytes,10,opt,name=daemon"`
 
 	// Steps define a series of sequential/parallel workflow steps
-	Steps [][]WorkflowStep `json:"steps,omitempty" protobuf:"bytes,11,opt,name=steps"`
+	Steps []ParallelSteps `json:"steps,omitempty" protobuf:"bytes,11,opt,name=steps"`
 
 	// Container is the main container image to run in the pod
 	Container *apiv1.Container `json:"container,omitempty" protobuf:"bytes,12,opt,name=container"`
@@ -778,7 +778,7 @@ func (tmpl *Template) SetType(tmplType TemplateType) {
 	}
 }
 
-func (tmpl *Template) setTemplateObjs(steps [][]WorkflowStep, dag *DAGTemplate, container *apiv1.Container, script *ScriptTemplate, resource *ResourceTemplate, data *Data, suspend *SuspendTemplate) {
+func (tmpl *Template) setTemplateObjs(steps []ParallelSteps, dag *DAGTemplate, container *apiv1.Container, script *ScriptTemplate, resource *ResourceTemplate, data *Data, suspend *SuspendTemplate) {
 	tmpl.Steps = steps
 	tmpl.DAG = dag
 	tmpl.Container = container
@@ -3462,7 +3462,7 @@ func (wf *Workflow) SetStoredTemplate(scope ResourceScope, resourceName string, 
 func (wf *Workflow) SetStoredInlineTemplate(scope ResourceScope, resourceName string, tmpl *Template) error {
 	// Store inline templates in steps.
 	for _, steps := range tmpl.Steps {
-		for _, step := range steps {
+		for _, step := range steps.Steps {
 			if step.GetTemplate() != nil {
 				_, err := wf.SetStoredTemplate(scope, resourceName, &step, step.GetTemplate())
 				if err != nil {

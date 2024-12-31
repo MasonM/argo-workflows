@@ -2511,12 +2511,17 @@ be cluster-scoped, so there is no namespace field.
 ### <span id="parallel-steps"></span> ParallelSteps
 
 
-> +kubebuilder:validation:Type=array
   
 
 
 
-[interface{}](#interface)
+**Properties**
+
+| Name | Type | Go type | Required | Default | Description | Example |
+|------|------|---------|:--------:| ------- |-------------|---------|
+| steps | [][WorkflowStep](#workflow-step)| `[]*WorkflowStep` |  | |  |  |
+
+
 
 ### <span id="parameter"></span> Parameter
 
@@ -3841,7 +3846,7 @@ of the first container processes are calculated.
 | securityContext | [PodSecurityContext](#pod-security-context)| `PodSecurityContext` |  | |  |  |
 | serviceAccountName | string| `string` |  | | ServiceAccountName to apply to workflow pods |  |
 | sidecars | [][UserContainer](#user-container)| `[]*UserContainer` |  | | Sidecars is a list of containers which run alongside the main container</br>Sidecars are automatically killed when the main container completes</br>+patchStrategy=merge</br>+patchMergeKey=name |  |
-| steps | [][ParallelSteps](#parallel-steps)| `[]ParallelSteps` |  | | Steps define a series of sequential/parallel workflow steps |  |
+| steps | [][ParallelSteps](#parallel-steps)| `[]*ParallelSteps` |  | | Steps define a series of sequential/parallel workflow steps |  |
 | suspend | [SuspendTemplate](#suspend-template)| `SuspendTemplate` |  | |  |  |
 | synchronization | [Synchronization](#synchronization)| `Synchronization` |  | |  |  |
 | timeout | string| `string` |  | | Timeout allows to set the total node execution timeout duration counting from the node's start time.</br>This duration also includes time in which the node spends in Pending state. This duration may not be applied to Step or DAG templates. |  |
@@ -4274,6 +4279,35 @@ intent and helps make sure that UIDs and names do not get conflated.
 | Name | Type | Go type | Required | Default | Description | Example |
 |------|------|---------|:--------:| ------- |-------------|---------|
 | metadata | [ObjectMeta](#object-meta)| `ObjectMeta` | ✓ | |  |  |
+
+
+
+### <span id="workflow-step"></span> WorkflowStep
+
+
+> WorkflowStep is a reference to a template to execute in a series of step
+  
+
+
+
+
+
+**Properties**
+
+| Name | Type | Go type | Required | Default | Description | Example |
+|------|------|---------|:--------:| ------- |-------------|---------|
+| arguments | [Arguments](#arguments)| `Arguments` |  | |  |  |
+| continueOn | [ContinueOn](#continue-on)| `ContinueOn` |  | |  |  |
+| hooks | [LifecycleHooks](#lifecycle-hooks)| `LifecycleHooks` |  | |  |  |
+| inline | [Template](#template)| `Template` |  | |  |  |
+| name | string| `string` |  | | Name of the step |  |
+| onExit | string| `string` |  | | OnExit is a template reference which is invoked at the end of the</br>template, irrespective of the success, failure, or error of the</br>primary template.</br>DEPRECATED: Use Hooks[exit].Template instead. |  |
+| template | string| `string` |  | | Template is the name of the template to execute as the step |  |
+| templateRef | [TemplateRef](#template-ref)| `TemplateRef` |  | |  |  |
+| when | string| `string` |  | | When is an expression in which the step should conditionally execute |  |
+| withItems | [][Item](#item)| `[]Item` |  | | WithItems expands a step into multiple parallel steps from the items in the list |  |
+| withParam | string| `string` |  | | WithParam expands a step into multiple parallel steps from the value in the parameter,</br>which is expected to be a JSON list. |  |
+| withSequence | [Sequence](#sequence)| `Sequence` |  | |  |  |
 
 
 

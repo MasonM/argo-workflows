@@ -542,6 +542,8 @@ message DAGTask {
   optional string template = 2;
 
   // Inline is the template. Template must be empty if this is declared (and vice-versa).
+  // +kubebuilder:pruning:PreserveUnknownFields
+  // +kubebuilder:validation:Schemaless
   optional Template inline = 14;
 
   // Arguments are the parameter and artifact arguments to the template
@@ -1228,7 +1230,6 @@ message Outputs {
   optional string exitCode = 4;
 }
 
-// +kubebuilder:validation:Type=array
 message ParallelSteps {
   repeated WorkflowStep steps = 1;
 }
@@ -2177,6 +2178,8 @@ message WorkflowStep {
   optional string template = 2;
 
   // Inline is the template. Template must be empty if this is declared (and vice-versa).
+  // +kubebuilder:pruning:PreserveUnknownFields
+  // +kubebuilder:validation:Schemaless
   optional Template inline = 13;
 
   // Arguments hold arguments to the template
