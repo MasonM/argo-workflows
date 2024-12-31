@@ -554,7 +554,6 @@ func (s ShutdownStrategy) ShouldExecute(isOnExitPod bool) bool {
 	}
 }
 
-// +kubebuilder:validation:Type=array
 type ParallelSteps struct {
 	Steps []WorkflowStep `json:"-" protobuf:"bytes,1,rep,name=steps"`
 }
@@ -636,7 +635,7 @@ type Template struct {
 	Daemon *bool `json:"daemon,omitempty" protobuf:"bytes,10,opt,name=daemon"`
 
 	// Steps define a series of sequential/parallel workflow steps
-	Steps []ParallelSteps `json:"steps,omitempty" protobuf:"bytes,11,opt,name=steps"`
+	Steps [][]WorkflowStep `json:"steps,omitempty" protobuf:"bytes,11,opt,name=steps"`
 
 	// Container is the main container image to run in the pod
 	Container *apiv1.Container `json:"container,omitempty" protobuf:"bytes,12,opt,name=container"`
@@ -779,7 +778,7 @@ func (tmpl *Template) SetType(tmplType TemplateType) {
 	}
 }
 
-func (tmpl *Template) setTemplateObjs(steps []ParallelSteps, dag *DAGTemplate, container *apiv1.Container, script *ScriptTemplate, resource *ResourceTemplate, data *Data, suspend *SuspendTemplate) {
+func (tmpl *Template) setTemplateObjs(steps [][]WorkflowStep, dag *DAGTemplate, container *apiv1.Container, script *ScriptTemplate, resource *ResourceTemplate, data *Data, suspend *SuspendTemplate) {
 	tmpl.Steps = steps
 	tmpl.DAG = dag
 	tmpl.Container = container
@@ -1502,6 +1501,8 @@ type WorkflowStep struct {
 	Template string `json:"template,omitempty" protobuf:"bytes,2,opt,name=template"`
 
 	// Inline is the template. Template must be empty if this is declared (and vice-versa).
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
 	Inline *Template `json:"inline,omitempty" protobuf:"bytes,13,opt,name=inline"`
 
 	// Arguments hold arguments to the template
@@ -3181,6 +3182,8 @@ type DAGTask struct {
 	Template string `json:"template,omitempty" protobuf:"bytes,2,opt,name=template"`
 
 	// Inline is the template. Template must be empty if this is declared (and vice-versa).
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
 	Inline *Template `json:"inline,omitempty" protobuf:"bytes,14,opt,name=inline"`
 
 	// Arguments are the parameter and artifact arguments to the template
@@ -3459,7 +3462,7 @@ func (wf *Workflow) SetStoredTemplate(scope ResourceScope, resourceName string, 
 func (wf *Workflow) SetStoredInlineTemplate(scope ResourceScope, resourceName string, tmpl *Template) error {
 	// Store inline templates in steps.
 	for _, steps := range tmpl.Steps {
-		for _, step := range steps.Steps {
+		for _, step := range steps {
 			if step.GetTemplate() != nil {
 				_, err := wf.SetStoredTemplate(scope, resourceName, &step, step.GetTemplate())
 				if err != nil {
