@@ -554,6 +554,7 @@ func (s ShutdownStrategy) ShouldExecute(isOnExitPod bool) bool {
 	}
 }
 
+// swagger:ignore
 type ParallelSteps struct {
 	Steps []WorkflowStep `json:"steps" protobuf:"bytes,1,rep,name=steps"`
 }

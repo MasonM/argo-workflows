@@ -2571,13 +2571,7 @@ definitions:
             uid:
                 $ref: '#/definitions/UID'
         type: object
-    ParallelSteps:
-        properties:
-            steps:
-                items:
-                    $ref: '#/definitions/WorkflowStep'
-                type: array
-        type: object
+    ParallelSteps: {}
     Parameter:
         description: Parameter indicate a passed string parameter to a service template with an optional default value
         properties:
@@ -5024,48 +5018,6 @@ definitions:
                 $ref: '#/definitions/ObjectMeta'
         required:
             - metadata
-        type: object
-    WorkflowStep:
-        description: WorkflowStep is a reference to a template to execute in a series of step
-        properties:
-            arguments:
-                $ref: '#/definitions/Arguments'
-            continueOn:
-                $ref: '#/definitions/ContinueOn'
-            hooks:
-                $ref: '#/definitions/LifecycleHooks'
-            inline:
-                $ref: '#/definitions/Template'
-            name:
-                description: Name of the step
-                type: string
-            onExit:
-                description: |-
-                    OnExit is a template reference which is invoked at the end of the
-                    template, irrespective of the success, failure, or error of the
-                    primary template.
-                    DEPRECATED: Use Hooks[exit].Template instead.
-                type: string
-            template:
-                description: Template is the name of the template to execute as the step
-                type: string
-            templateRef:
-                $ref: '#/definitions/TemplateRef'
-            when:
-                description: When is an expression in which the step should conditionally execute
-                type: string
-            withItems:
-                description: WithItems expands a step into multiple parallel steps from the items in the list
-                items:
-                    $ref: '#/definitions/Item'
-                type: array
-            withParam:
-                description: |-
-                    WithParam expands a step into multiple parallel steps from the value in the parameter,
-                    which is expected to be a JSON list.
-                type: string
-            withSequence:
-                $ref: '#/definitions/Sequence'
         type: object
     ZipStrategy:
         description: ZipStrategy will unzip zipped input artifacts

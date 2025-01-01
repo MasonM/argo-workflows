@@ -1229,6 +1229,7 @@ message Outputs {
   optional string exitCode = 4;
 }
 
+// swagger:ignore
 message ParallelSteps {
   repeated WorkflowStep steps = 1;
 }
