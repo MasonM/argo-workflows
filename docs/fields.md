@@ -107,8 +107,6 @@ Workflow is the definition of a workflow resource
 
 - [`dag-task-level-timeout.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/dag-task-level-timeout.yaml)
 
-- [`dangerous-interpolation.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/dangerous-interpolation.yaml)
-
 - [`data-transformations.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/data-transformations.yaml)
 
 - [`default-pdb-support.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/default-pdb-support.yaml)
@@ -581,8 +579,6 @@ WorkflowSpec is the specification of a Workflow.
 
 - [`dag-task-level-timeout.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/dag-task-level-timeout.yaml)
 
-- [`dangerous-interpolation.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/dangerous-interpolation.yaml)
-
 - [`data-transformations.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/data-transformations.yaml)
 
 - [`default-pdb-support.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/default-pdb-support.yaml)
@@ -1036,8 +1032,6 @@ CronWorkflowSpec is the specification of a CronWorkflow
 
 - [`dag-task-level-timeout.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/dag-task-level-timeout.yaml)
 
-- [`dangerous-interpolation.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/dangerous-interpolation.yaml)
-
 - [`data-transformations.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/data-transformations.yaml)
 
 - [`default-pdb-support.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/default-pdb-support.yaml)
@@ -1395,8 +1389,6 @@ Arguments to a template
 - [`dag-targets.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/dag-targets.yaml)
 
 - [`dag-task-level-timeout.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/dag-task-level-timeout.yaml)
-
-- [`dangerous-interpolation.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/dangerous-interpolation.yaml)
 
 - [`data-transformations.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/data-transformations.yaml)
 
@@ -2248,8 +2240,6 @@ Parameter indicate a passed string parameter to a service template with an optio
 
 - [`dag-task-level-timeout.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/dag-task-level-timeout.yaml)
 
-- [`dangerous-interpolation.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/dangerous-interpolation.yaml)
-
 - [`data-transformations.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/data-transformations.yaml)
 
 - [`exit-code-output-variable.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/exit-code-output-variable.yaml)
@@ -3019,8 +3009,6 @@ ScriptTemplate is a template subtype to enable scripting through code steps
 
 - [`dag-conditional-parameters.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/dag-conditional-parameters.yaml)
 
-- [`dangerous-interpolation.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/dangerous-interpolation.yaml)
-
 - [`exit-handler-with-artifacts.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/exit-handler-with-artifacts.yaml)
 
 - [`exit-handler-with-param.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/exit-handler-with-param.yaml)
@@ -3137,8 +3125,6 @@ WorkflowStep is a reference to a template to execute in a series of step
 - [`dag-coinflip.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/dag-coinflip.yaml)
 
 - [`dag-diamond-steps.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/dag-diamond-steps.yaml)
-
-- [`dangerous-interpolation.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/dangerous-interpolation.yaml)
 
 - [`data-transformations.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/data-transformations.yaml)
 
@@ -4073,8 +4059,6 @@ DataSource sources external data into a data template
 
 - [`dag-conditional-parameters.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/dag-conditional-parameters.yaml)
 
-- [`dangerous-interpolation.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/dangerous-interpolation.yaml)
-
 - [`data-transformations.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/data-transformations.yaml)
 
 - [`exit-handler-with-artifacts.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/exit-handler-with-artifacts.yaml)
@@ -4821,8 +4805,6 @@ ObjectMeta is metadata that all persisted resources must have, which includes al
 
 - [`dag-task-level-timeout.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/dag-task-level-timeout.yaml)
 
-- [`dangerous-interpolation.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/dangerous-interpolation.yaml)
-
 - [`data-transformations.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/data-transformations.yaml)
 
 - [`default-pdb-support.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/default-pdb-support.yaml)
@@ -5448,8 +5430,6 @@ A single application container that you want to run within a pod.
 - [`dag-targets.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/dag-targets.yaml)
 
 - [`dag-task-level-timeout.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/dag-task-level-timeout.yaml)
-
-- [`dangerous-interpolation.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/dangerous-interpolation.yaml)
 
 - [`data-transformations.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/data-transformations.yaml)
 
@@ -6428,8 +6408,6 @@ ImageVolumeSource represents a image volume resource.
 - [`dag-targets.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/dag-targets.yaml)
 
 - [`dag-task-level-timeout.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/dag-task-level-timeout.yaml)
-
-- [`dangerous-interpolation.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/dangerous-interpolation.yaml)
 
 - [`data-transformations.yaml`](https://github.com/argoproj/argo-workflows/blob/main/examples/data-transformations.yaml)
 
