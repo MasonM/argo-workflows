@@ -1,23 +1,9 @@
 package main
 
-import (
-	"fmt"
-	"os"
-	"path/filepath"
-
-	"sigs.k8s.io/yaml"
-)
+import "fmt"
 
 func cleanCRD(filename string) {
-	data, err := os.ReadFile(filepath.Clean(filename))
-	if err != nil {
-		panic(err)
-	}
-	crd := make(obj)
-	err = yaml.Unmarshal(data, &crd)
-	if err != nil {
-		panic(err)
-	}
+	crd := ParseYaml(Read(filename))
 	crd.RemoveNestedField("status")
 	crd.RemoveNestedField("metadata", "annotations")
 	crd.RemoveNestedField("metadata", "creationTimestamp")
@@ -32,14 +18,7 @@ func cleanCRD(filename string) {
 		patchTemplateFields(&schema, "status", "properties", "storedTemplates", "additionalProperties")
 		patchWorkflowSpecTemplateFields(&schema, "status", "properties", "storedWorkflowTemplateSpec", "properties")
 	}
-	data, err = yaml.Marshal(crd)
-	if err != nil {
-		panic(err)
-	}
-	err = os.WriteFile(filename, data, 0o600)
-	if err != nil {
-		panic(err)
-	}
+	crd.WriteYaml(filename)
 }
 
 func patchWorkflowSpecTemplateFields(schema *obj, baseFields ...string) {
@@ -48,45 +27,28 @@ func patchWorkflowSpecTemplateFields(schema *obj, baseFields ...string) {
 }
 
 func patchTemplateFields(schema *obj, baseFields ...string) {
-	schema.SetNestedField([]string{"image"}, append(baseFields, "properties", "container", "required")...)
-	schema.SetNestedField([]string{"image", "source"}, append(baseFields, "properties", "script", "required")...)
+	// container and script templates embed the k8s.io/api/core/v1/Container
+	// struct, and kubebuilder marks the "name" field as required, but it's not actually required.
+	schema.RemoveNestedField(append(baseFields, "properties", "container", "required")...)
+	schema.RemoveNestedField(append(baseFields, "properties", "script", "required")...)
 	stepFields := append(baseFields, "properties", "steps", "items")
 	schema.CopyNestedField(append(stepFields, "properties", "steps"), stepFields)
 }
 
 // minimizeCRD generates a stripped-down CRD as a workaround for "Request entity too large: limit is 3145728" errors due to https://github.com/kubernetes/kubernetes/issues/82292.
 func minimizeCRD(filename string) {
-	data, err := os.ReadFile(filepath.Clean(filename))
-	if err != nil {
-		panic(err)
-	}
-
+	data := Read(filename)
 	shouldMinimize := false
 	if len(data) > 512*1024 {
 		fmt.Printf("Minimizing %s due to CRD size (%d) exceeding 512KB\n", filename, len(data))
 		shouldMinimize = true
 	}
-
-	crd := make(obj)
-	err = yaml.Unmarshal(data, &crd)
-	if err != nil {
-		panic(err)
-	}
-
 	if !shouldMinimize {
 		return
 	}
-
-	stripSpecAndStatusFields(&crd)
-
-	data, err = yaml.Marshal(crd)
-	if err != nil {
-		panic(err)
-	}
-	err = os.WriteFile(filename, data, 0o600)
-	if err != nil {
-		panic(err)
-	}
+	crd := ParseYaml(data)
+	stripSpecAndStatusFields(crd)
+	crd.WriteYaml(filename)
 }
 
 // stripSpecAndStatusFields strips the "spec" and "status" fields from the CRD, as those are usually the largest.

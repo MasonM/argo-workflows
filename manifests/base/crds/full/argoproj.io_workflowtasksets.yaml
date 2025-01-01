@@ -7736,7 +7736,6 @@ spec:
                           type: string
                       required:
                       - name
-                      - source
                       type: object
                     securityContext:
                       properties:

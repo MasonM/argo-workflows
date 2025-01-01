@@ -5818,7 +5818,7 @@ func schema_pkg_apis_workflow_v1alpha1_ScriptTemplate(ref common.ReferenceCallba
 						},
 					},
 				},
-				Required: []string{"name", "source"},
+				Required: []string{"name"},
 			},
 		},
 		Dependencies: []string{

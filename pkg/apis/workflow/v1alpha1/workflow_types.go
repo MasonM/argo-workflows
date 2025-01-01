@@ -2981,6 +2981,7 @@ type ScriptTemplate struct {
 	apiv1.Container `json:",inline" protobuf:"bytes,1,opt,name=container"`
 
 	// Source contains the source code of the script to execute
+	// +optional
 	Source string `json:"source" protobuf:"bytes,2,opt,name=source"`
 }
 

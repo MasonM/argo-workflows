@@ -3811,8 +3811,6 @@ spec:
                         x-kubernetes-list-type: map
                       workingDir:
                         type: string
-                    required:
-                    - image
                     type: object
                   containerSet:
                     properties:
@@ -9888,9 +9886,6 @@ spec:
                         x-kubernetes-list-type: map
                       workingDir:
                         type: string
-                    required:
-                    - image
-                    - source
                     type: object
                   securityContext:
                     properties:
@@ -14486,8 +14481,6 @@ spec:
                           x-kubernetes-list-type: map
                         workingDir:
                           type: string
-                      required:
-                      - image
                       type: object
                     containerSet:
                       properties:
@@ -20563,9 +20556,6 @@ spec:
                           x-kubernetes-list-type: map
                         workingDir:
                           type: string
-                      required:
-                      - image
-                      - source
                       type: object
                     securityContext:
                       properties:
@@ -29325,8 +29315,6 @@ spec:
                           x-kubernetes-list-type: map
                         workingDir:
                           type: string
-                      required:
-                      - image
                       type: object
                     containerSet:
                       properties:
@@ -35402,9 +35390,6 @@ spec:
                           x-kubernetes-list-type: map
                         workingDir:
                           type: string
-                      required:
-                      - image
-                      - source
                       type: object
                     securityContext:
                       properties:
@@ -42142,8 +42127,6 @@ spec:
                             x-kubernetes-list-type: map
                           workingDir:
                             type: string
-                        required:
-                        - image
                         type: object
                       containerSet:
                         properties:
@@ -48219,9 +48202,6 @@ spec:
                             x-kubernetes-list-type: map
                           workingDir:
                             type: string
-                        required:
-                        - image
-                        - source
                         type: object
                       securityContext:
                         properties:
@@ -52817,8 +52797,6 @@ spec:
                               x-kubernetes-list-type: map
                             workingDir:
                               type: string
-                          required:
-                          - image
                           type: object
                         containerSet:
                           properties:
@@ -58894,9 +58872,6 @@ spec:
                               x-kubernetes-list-type: map
                             workingDir:
                               type: string
-                          required:
-                          - image
-                          - source
                           type: object
                         securityContext:
                           properties:
