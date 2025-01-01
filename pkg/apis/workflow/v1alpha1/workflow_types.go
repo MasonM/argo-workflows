@@ -1513,6 +1513,8 @@ type WorkflowStep struct {
 	TemplateRef *TemplateRef `json:"templateRef,omitempty" protobuf:"bytes,4,opt,name=templateRef"`
 
 	// WithItems expands a step into multiple parallel steps from the items in the list
+	// +kubebuilder:validation:Schemaless
+	// +kubebuilder:pruning:PreserveUnknownFields
 	WithItems []Item `json:"withItems,omitempty" protobuf:"bytes,5,rep,name=withItems"`
 
 	// WithParam expands a step into multiple parallel steps from the value in the parameter,
@@ -3196,6 +3198,8 @@ type DAGTask struct {
 	Dependencies []string `json:"dependencies,omitempty" protobuf:"bytes,5,rep,name=dependencies"`
 
 	// WithItems expands a task into multiple parallel tasks from the items in the list
+	// +kubebuilder:validation:Schemaless
+	// +kubebuilder:pruning:PreserveUnknownFields
 	WithItems []Item `json:"withItems,omitempty" protobuf:"bytes,6,rep,name=withItems"`
 
 	// WithParam expands a task into multiple parallel tasks from the value in the parameter,

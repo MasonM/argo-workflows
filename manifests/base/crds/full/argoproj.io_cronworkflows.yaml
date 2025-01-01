@@ -5884,10 +5884,7 @@ spec:
                                 when:
                                   type: string
                                 withItems:
-                                  items:
-                                    type: object
-                                    x-kubernetes-preserve-unknown-fields: true
-                                  type: array
+                                  x-kubernetes-preserve-unknown-fields: true
                                 withParam:
                                   type: string
                                 withSequence:
@@ -11990,10 +11987,7 @@ spec:
                               when:
                                 type: string
                               withItems:
-                                items:
-                                  type: object
-                                  x-kubernetes-preserve-unknown-fields: true
-                                type: array
+                                x-kubernetes-preserve-unknown-fields: true
                               withParam:
                                 type: string
                               withSequence:
@@ -16565,10 +16559,7 @@ spec:
                                   when:
                                     type: string
                                   withItems:
-                                    items:
-                                      type: object
-                                      x-kubernetes-preserve-unknown-fields: true
-                                    type: array
+                                    x-kubernetes-preserve-unknown-fields: true
                                   withParam:
                                     type: string
                                   withSequence:
@@ -22671,10 +22662,7 @@ spec:
                                 when:
                                   type: string
                                 withItems:
-                                  items:
-                                    type: object
-                                    x-kubernetes-preserve-unknown-fields: true
-                                  type: array
+                                  x-kubernetes-preserve-unknown-fields: true
                                 withParam:
                                   type: string
                                 withSequence:
