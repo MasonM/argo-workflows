@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - ../base
+  - ../base/crds/minimal
   - ./argo-server-rbac
   - ./workflow-controller-rbac
 

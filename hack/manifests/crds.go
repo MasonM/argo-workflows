@@ -56,9 +56,7 @@ func patchTemplateFields(specProperties *interface{}) {
 	}
 }
 
-// minimizeCRD is a workaround for two separate issues:
-// 1. "Request entity too large: limit is 3145728" errors due to https://github.com/kubernetes/kubernetes/issues/82292
-// 2. "spec.validation.openAPIV3Schema.properties[spec].properties[tasks].additionalProperties.properties[steps].items.items: Required value: must be specified" due to kubebuilder issues (https://github.com/argoproj/argo-workflows/pull/3809#discussion_r472383090)
+// minimizeCRD generates a stripped-down CRD as a workaround for "Request entity too large: limit is 3145728" errors due to https://github.com/kubernetes/kubernetes/issues/82292.
 func minimizeCRD(filename string) {
 	data, err := os.ReadFile(filepath.Clean(filename))
 	if err != nil {
