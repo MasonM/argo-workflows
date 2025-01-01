@@ -8567,6 +8567,7 @@ spec:
                     type: integer
                   plugin:
                     type: object
+                    x-kubernetes-preserve-unknown-fields: true
                   podSpecPatch:
                     type: string
                   priority:
@@ -19245,6 +19246,7 @@ spec:
                       type: integer
                     plugin:
                       type: object
+                      x-kubernetes-preserve-unknown-fields: true
                     podSpecPatch:
                       type: string
                     priority:
