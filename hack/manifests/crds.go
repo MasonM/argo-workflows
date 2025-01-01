@@ -5,8 +5,6 @@ import (
 	"os"
 	"path/filepath"
 
-	apiext "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/yaml"
 )
 
@@ -15,29 +13,24 @@ func cleanCRD(filename string) {
 	if err != nil {
 		panic(err)
 	}
-	crd := apiext.CustomResourceDefinition{}
+	crd := make(obj)
 	err = yaml.Unmarshal(data, &crd)
 	if err != nil {
 		panic(err)
 	}
-	crd.Status = apiext.CustomResourceDefinitionStatus{}
-	crd.Annotations = nil
-	crd.CreationTimestamp = metav1.Time{}
-	schema := crd.Spec.Versions[0].Schema.OpenAPIV3Schema
-	switch crd.Name {
+	crd.RemoveNestedField("status")
+	crd.RemoveNestedField("metadata", "annotations")
+	crd.RemoveNestedField("metadata", "creationTimestamp")
+	schema := crd.OpenAPIV3Schema()
+	switch crd.Name() {
 	case "cronworkflows.argoproj.io":
-		specProperties := schema.Properties["Spec"].Properties["workflowSpec"].Properties
-		patchWorkflowSpecTemplateFields(&specProperties)
+		patchWorkflowSpecTemplateFields(&schema, "properties", "spec", "properties", "workflowSpec", "properties")
 	case "clusterworkflowtemplates.argoproj.io", "workflows.argoproj.io", "workflowtemplates.argoproj.io":
-		specProperties := schema.Properties["Spec"].Properties
-		patchWorkflowSpecTemplateFields(&specProperties)
+		patchWorkflowSpecTemplateFields(&schema, "properties", "spec", "properties")
 	}
-	if crd.Name == "workflows.argoproj.io" {
-		statusProperties := schema.Properties["status"].Properties
-		storedTemplates := statusProperties["storedTemplates"].AdditionalProperties.Schema
-		patchTemplateFields(storedTemplates)
-		storedWorkflowTemplateSpec := statusProperties["storedWorkflowTemplateSpec"].Properties
-		patchWorkflowSpecTemplateFields(&storedWorkflowTemplateSpec)
+	if crd.Name() == "workflows.argoproj.io" {
+		patchTemplateFields(&schema, "properties", "status", "properties", "storedTemplates", "additionalProperties")
+		patchWorkflowSpecTemplateFields(&schema, "properties", "status", "properties", "storedWorkflowTemplateSpec", "properties")
 	}
 	data, err = yaml.Marshal(crd)
 	if err != nil {
@@ -49,21 +42,16 @@ func cleanCRD(filename string) {
 	}
 }
 
-func patchWorkflowSpecTemplateFields(specProperties *map[string]apiext.JSONSchemaProps) {
-	for _, properties := range []apiext.JSONSchemaProps{(*specProperties)["templateDefaults"], *(*specProperties)["template"].Items.Schema} {
-		patchTemplateFields(&properties)
-	}
+func patchWorkflowSpecTemplateFields(specProperties *obj, baseFields ...string) {
+	patchTemplateFields(specProperties, append(baseFields, "templateDefaults")...)
+	patchTemplateFields(specProperties, append(baseFields, "templates", "items")...)
 }
 
-func patchTemplateFields(field *apiext.JSONSchemaProps) {
-	properties := (*field).Properties
-	container := properties["container"]
-	container.Required = []string{"image"}
-	script := properties["script"]
-	script.Required = []string{"image", "source"}
-	steps := properties["steps"]
-	nestedSteps := steps.Items.Schema.Properties["steps"]
-	steps.Items = &apiext.JSONSchemaPropsOrArray{Schema: &nestedSteps}
+func patchTemplateFields(field *obj, baseFields ...string) {
+	field.SetNestedField([]string{"image"}, append(baseFields, "properties", "container", "required")...)
+	field.SetNestedField([]string{"image", "source"}, append(baseFields, "properties", "script", "required")...)
+	stepFields := append(baseFields, "properties", "steps", "items")
+	field.SetNestedField(field.NestedFieldNoCopy(append(stepFields, "properties", "steps")...), stepFields...)
 }
 
 // minimizeCRD generates a stripped-down CRD as a workaround for "Request entity too large: limit is 3145728" errors due to https://github.com/kubernetes/kubernetes/issues/82292.
