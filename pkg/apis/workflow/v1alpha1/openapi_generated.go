@@ -4804,8 +4804,9 @@ func schema_pkg_apis_workflow_v1alpha1_ParallelSteps(ref common.ReferenceCallbac
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type:   ParallelSteps{}.OpenAPISchemaType(),
-				Format: ParallelSteps{}.OpenAPISchemaFormat(),
+				Description: "swagger:ignore",
+				Type:        ParallelSteps{}.OpenAPISchemaType(),
+				Format:      ParallelSteps{}.OpenAPISchemaFormat(),
 			},
 		},
 	}
