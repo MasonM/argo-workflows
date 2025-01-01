@@ -50,8 +50,8 @@ func patchWorkflowSpecTemplateFields(schema *obj, baseFields ...string) {
 func patchTemplateFields(schema *obj, baseFields ...string) {
 	schema.SetNestedField([]string{"image"}, append(baseFields, "properties", "container", "required")...)
 	schema.SetNestedField([]string{"image", "source"}, append(baseFields, "properties", "script", "required")...)
-	stepFields := append(baseFields, "properties", "steps")
-	schema.CopyNestedField(append(stepFields, "items", "properties", "steps"), stepFields)
+	stepFields := append(baseFields, "properties", "steps", "items")
+	schema.CopyNestedField(append(stepFields, "properties", "steps"), stepFields)
 }
 
 // minimizeCRD generates a stripped-down CRD as a workaround for "Request entity too large: limit is 3145728" errors due to https://github.com/kubernetes/kubernetes/issues/82292.
