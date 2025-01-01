@@ -30,18 +30,17 @@ func cleanCRD(filename string) {
 	switch name {
 	case "cronworkflows.argoproj.io":
 		specProperties := schema["properties"].(obj)["spec"].(obj)["properties"].(obj)["workflowSpec"].(obj)["properties"]
-		for _, properties := range []interface{}{specProperties.(obj)["templateDefaults"], specProperties.(obj)["templates"].(obj)["items"]} {
-			patchTemplateFields(&properties)
-		}
+		patchWorkflowSpecTemplateFields(&specProperties)
 	case "clusterworkflowtemplates.argoproj.io", "workflows.argoproj.io", "workflowtemplates.argoproj.io":
 		specProperties := schema["properties"].(obj)["spec"].(obj)["properties"]
-		for _, properties := range []interface{}{specProperties.(obj)["templateDefaults"], specProperties.(obj)["templates"].(obj)["items"]} {
-			patchTemplateFields(&properties)
-		}
+		patchWorkflowSpecTemplateFields(&specProperties)
 	}
 	if name == "workflows.argoproj.io" {
-		properties := schema["properties"].(obj)["status"].(obj)["properties"].(obj)["storedTemplates"].(obj)["additionalProperties"]
-		patchTemplateFields(&properties)
+		statusProperties := schema["properties"].(obj)["status"].(obj)["properties"]
+		storedTemplates := statusProperties.(obj)["storedTemplates"].(obj)["additionalProperties"]
+		patchTemplateFields(&storedTemplates)
+		storedWorkflowTemplateSpec := statusProperties.(obj)["storedWorkflowTemplateSpec"].(obj)["properties"]
+		patchWorkflowSpecTemplateFields(&storedWorkflowTemplateSpec)
 	}
 	data, err = yaml.Marshal(crd)
 	if err != nil {
@@ -53,11 +52,17 @@ func cleanCRD(filename string) {
 	}
 }
 
+func patchWorkflowSpecTemplateFields(specProperties *interface{}) {
+	for _, properties := range []interface{}{(*specProperties).(obj)["templateDefaults"], (*specProperties).(obj)["templates"].(obj)["items"]} {
+		patchTemplateFields(&properties)
+	}
+}
+
 func patchTemplateFields(field *interface{}) {
 	properties := (*field).(obj)["properties"]
 	properties.(obj)["container"].(obj)["required"] = []string{"image"}
 	properties.(obj)["script"].(obj)["required"] = []string{"image", "source"}
-	properties.(obj)["steps"] = properties.(obj)["steps"].(obj)["items"].(obj)["properties"].(obj)["steps"]
+	properties.(obj)["steps"].(obj)["items"] = properties.(obj)["steps"].(obj)["items"].(obj)["properties"].(obj)["steps"]
 }
 
 // minimizeCRD generates a stripped-down CRD as a workaround for "Request entity too large: limit is 3145728" errors due to https://github.com/kubernetes/kubernetes/issues/82292.
