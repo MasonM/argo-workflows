@@ -3,6 +3,7 @@ kind: Component
 
 resources:
 - ../../../../../manifests/base/crds/full
+- ../../../../../manifests/quick-start/base
 - argo-server.service-account-token-secret.yaml
 
 patches:
