@@ -5886,6 +5886,7 @@ spec:
                                 withItems:
                                   items:
                                     type: object
+                                    x-kubernetes-preserve-unknown-fields: true
                                   type: array
                                 withParam:
                                   type: string
@@ -11991,6 +11992,7 @@ spec:
                               withItems:
                                 items:
                                   type: object
+                                  x-kubernetes-preserve-unknown-fields: true
                                 type: array
                               withParam:
                                 type: string
@@ -16565,6 +16567,7 @@ spec:
                                   withItems:
                                     items:
                                       type: object
+                                      x-kubernetes-preserve-unknown-fields: true
                                     type: array
                                   withParam:
                                     type: string
@@ -22670,6 +22673,7 @@ spec:
                                 withItems:
                                   items:
                                     type: object
+                                    x-kubernetes-preserve-unknown-fields: true
                                   type: array
                                 withParam:
                                   type: string
