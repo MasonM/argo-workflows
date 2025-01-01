@@ -71,6 +71,7 @@ require (
 	google.golang.org/grpc v1.65.0
 	gopkg.in/go-playground/webhooks.v5 v5.17.0
 	k8s.io/api v0.31.3
+	k8s.io/apiextensions-apiserver v0.31.3
 	k8s.io/apimachinery v0.31.3
 	k8s.io/cli-runtime v0.31.3
 	k8s.io/client-go v0.31.3
@@ -136,7 +137,7 @@ require (
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/vbatts/tar-split v0.11.3 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
-	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.47.0 // indirect
+	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.53.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.53.0 // indirect
 	go.opentelemetry.io/otel/trace v1.32.0 // indirect
 	go.opentelemetry.io/proto/otlp v1.3.1 // indirect
