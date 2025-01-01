@@ -12,8 +12,3 @@ patches:
 - path: workflow-controller-deployment.yaml
 - path: workflow-controller-cluster-workflow-template-rbac.yaml
 - path: minio-deployment.yaml
-
-labels:
-- includeSelectors: true
-  pairs:
-    app.kubernetes.io/part-of: argo

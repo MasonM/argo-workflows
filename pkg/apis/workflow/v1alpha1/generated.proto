@@ -543,7 +543,6 @@ message DAGTask {
 
   // Inline is the template. Template must be empty if this is declared (and vice-versa).
   // +kubebuilder:pruning:PreserveUnknownFields
-  // +kubebuilder:validation:Schemaless
   optional Template inline = 14;
 
   // Arguments are the parameter and artifact arguments to the template
@@ -2179,7 +2178,6 @@ message WorkflowStep {
 
   // Inline is the template. Template must be empty if this is declared (and vice-versa).
   // +kubebuilder:pruning:PreserveUnknownFields
-  // +kubebuilder:validation:Schemaless
   optional Template inline = 13;
 
   // Arguments hold arguments to the template

@@ -1502,7 +1502,6 @@ type WorkflowStep struct {
 
 	// Inline is the template. Template must be empty if this is declared (and vice-versa).
 	// +kubebuilder:pruning:PreserveUnknownFields
-	// +kubebuilder:validation:Schemaless
 	Inline *Template `json:"inline,omitempty" protobuf:"bytes,13,opt,name=inline"`
 
 	// Arguments hold arguments to the template
@@ -3183,7 +3182,6 @@ type DAGTask struct {
 
 	// Inline is the template. Template must be empty if this is declared (and vice-versa).
 	// +kubebuilder:pruning:PreserveUnknownFields
-	// +kubebuilder:validation:Schemaless
 	Inline *Template `json:"inline,omitempty" protobuf:"bytes,14,opt,name=inline"`
 
 	// Arguments are the parameter and artifact arguments to the template
