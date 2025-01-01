@@ -29,9 +29,11 @@ func cleanCRD(filename string) {
 	name := crd["metadata"].(obj)["name"].(string)
 	switch name {
 	case "cronworkflows.argoproj.io":
-		schema["properties"].(obj)["spec"].(obj)["properties"].(obj)["workflowSpec"].(obj)["properties"] = patchTemplateFields(schema["properties"].(obj)["spec"].(obj)["properties"].(obj)["workflowSpec"].(obj)["properties"])
+		properties := schema["properties"].(obj)["spec"].(obj)["properties"].(obj)["workflowSpec"].(obj)["properties"]
+		patchTemplateFields(&properties)
 	case "clusterworkflowtemplates.argoproj.io", "workflows.argoproj.io", "workflowtemplates.argoproj.io":
-		schema["properties"].(obj)["spec"].(obj)["properties"] = patchTemplateFields(schema["properties"].(obj)["spec"].(obj)["properties"])
+		properties := schema["properties"].(obj)["spec"].(obj)["properties"]
+		patchTemplateFields(&properties)
 	}
 	data, err = yaml.Marshal(crd)
 	if err != nil {
@@ -43,16 +45,15 @@ func cleanCRD(filename string) {
 	}
 }
 
-func patchTemplateFields(specProperties interface{}) interface{} {
+func patchTemplateFields(specProperties *interface{}) {
 	for _, properties := range []interface{}{
-		specProperties.(obj)["templateDefaults"].(obj)["properties"],
-		specProperties.(obj)["templates"].(obj)["items"].(obj)["properties"],
+		(*specProperties).(obj)["templateDefaults"].(obj)["properties"],
+		(*specProperties).(obj)["templates"].(obj)["items"].(obj)["properties"],
 	} {
 		properties.(obj)["container"].(obj)["required"] = []string{"image"}
 		properties.(obj)["script"].(obj)["required"] = []string{"image", "source"}
 		properties.(obj)["steps"] = properties.(obj)["steps"].(obj)["items"].(obj)["properties"].(obj)["steps"]
 	}
-	return specProperties
 }
 
 // minimizeCRD is a workaround for two separate issues:
