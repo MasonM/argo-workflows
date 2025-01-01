@@ -24663,13 +24663,6 @@ spec:
               succeeded:
                 format: int64
                 type: integer
-            required:
-            - active
-            - conditions
-            - failed
-            - lastScheduledTime
-            - phase
-            - succeeded
             type: object
         required:
         - metadata
