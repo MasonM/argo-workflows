@@ -11,6 +11,9 @@ patches:
 - path: workflow-controller-cluster-workflow-template-rbac.yaml
 - path: minio-deployment.yaml
 
+components:
+- ../../../../../manifests/base/crds/full
+
 labels:
 - includeSelectors: true
   pairs:
