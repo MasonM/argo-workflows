@@ -85,15 +85,6 @@ func minimizeCRD(filename string) {
 	}
 
 	if !shouldMinimize {
-		name := crd["metadata"].(obj)["name"].(string)
-		switch name {
-		case "cronworkflows.argoproj.io", "clusterworkflowtemplates.argoproj.io", "workflows.argoproj.io", "workflowtemplates.argoproj.io", "workflowtasksets.argoproj.io":
-			fmt.Printf("Minimizing %s due to kubebuilder issues\n", filename)
-			shouldMinimize = true
-		}
-	}
-
-	if !shouldMinimize {
 		return
 	}
 
