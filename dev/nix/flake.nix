@@ -371,10 +371,6 @@
                   enterShell = ''
                     unset GOPATH;
                     unset GOROOT;
-                    ./hack/port-forward.sh;
-                    ./hack/free-port.sh 9090;
-                    ./hack/free-port.sh 2746;
-                    ./hack/free-port.sh 8080;
                     yarn --cwd ui install;
                   '';
                   processes = {

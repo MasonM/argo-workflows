@@ -64,7 +64,7 @@ func (s *CLISuite) setMode(mode string) {
 		_ = os.Unsetenv("ARGO_HTTP1")
 		_ = os.Unsetenv("ARGO_TOKEN")
 		_ = os.Unsetenv("ARGO_NAMESPACE")
-		_ = os.Setenv("KUBECONFIG", kubeConfig)
+		_ = os.Setenv("KUBECONFIG", "testdata/kubeconfig-fake-user:"+kubeConfig)
 	case OFFLINE:
 		_ = os.Unsetenv("KUBECONFIG")
 	default:
@@ -248,21 +248,14 @@ func (s *CLISuite) TestSubmitWorkflowTemplateServerDryRun() {
 }
 
 func (s *CLISuite) TestTokenArg() {
-	if os.Getenv("CI") != "true" {
-		s.T().Skip("we only set-up the KUBECONFIG on CI")
-	}
 	s.setMode(KUBE)
+	goodToken, err := s.GetServiceAccountToken()
+	s.CheckError(err)
+
 	s.Run("ListWithBadToken", func() {
 		s.Given().RunCli([]string{"list", "--user", "fake_token_user", "--token", "badtoken"}, func(t *testing.T, output string, err error) {
 			require.Error(t, err)
 		})
-	})
-
-	var goodToken string
-	s.Run("GetSAToken", func() {
-		token, err := s.GetServiceAccountToken()
-		s.Require().NoError(err)
-		goodToken = token
 	})
 	s.Run("ListWithGoodToken", func() {
 		s.Given().RunCli([]string{"list", "--user", "fake_token_user", "--token", goodToken}, func(t *testing.T, output string, err error) {

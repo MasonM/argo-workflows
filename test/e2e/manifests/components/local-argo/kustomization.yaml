@@ -7,3 +7,12 @@ replicas:
     count: 0
   - name: workflow-controller
     count: 0
+
+patches:
+- patch: |-
+    - op: replace
+      path: /spec/type
+      value: ClusterIP
+  target:
+    kind: Service
+    name: argo-server

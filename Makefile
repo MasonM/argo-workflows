@@ -574,15 +574,15 @@ endif
 .PHONY: wait
 wait:
 	# Wait for workflow controller
-	until lsof -i :9090 > /dev/null ; do sleep 10s ; done
+	./hack/wait-ports.sh 9090
 ifeq ($(API),true)
 	# Wait for Argo Server
-	until lsof -i :2746 > /dev/null ; do sleep 10s ; done
+	./hack/wait-ports.sh 2746
 endif
-ifeq ($(PROFILE),mysql)
-	# Wait for MySQL
-	until (: < /dev/tcp/localhost/3306) ; do sleep 10s ; done
-endif
+
+.PHONY: wait-dependencies
+wait-dependencies:
+	./hack/wait-dependencies.sh
 
 .PHONY: postgres-cli
 postgres-cli:

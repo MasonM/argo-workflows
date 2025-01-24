@@ -84,3 +84,4 @@ spec:
   - port: 10000
     targetPort: 10000
     protocol: TCP
+  type: LoadBalancer

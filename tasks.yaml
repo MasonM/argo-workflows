@@ -30,13 +30,12 @@ spec:
       watch: cmd/workflow-controller config errors persist pkg util workflow
       dependencies: go-deps
       mutex: build
-    - name: port-forward
-      command: ./hack/port-forward.sh
-      ports: 9000
+    - name: wait-dependencies
+      command: make wait-dependencies
       dependencies: install
     - name: controller
       command: ./dist/workflow-controller
-      dependencies: install build-controller port-forward
+      dependencies: install build-controller wait-dependencies
       env:
         - ARGO_EXECUTOR_PLUGINS=false
         - ARGO_NAMESPACE=argo
@@ -62,7 +61,7 @@ spec:
       mutex: build
     - name: server
       command: ./dist/argo server
-      dependencies: build-argo port-forward
+      dependencies: build-argo wait-dependencies
       env:
         - ARGO_X_FRAME_OPTIONS=SAMEORIGIN
         - ARGO_SECURE=false

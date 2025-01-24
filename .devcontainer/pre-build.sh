@@ -18,6 +18,7 @@ curl -q https://raw.githubusercontent.com/kitproj/kit/main/install.sh | sh
 # install protocol buffer compiler (protoc)
 sudo apt update
 sudo apt install -y protobuf-compiler
+sudo service k3s start
 
 # Make sure go path is owned by vscode
 sudo chown vscode:vscode /home/vscode/go || true
@@ -25,7 +26,7 @@ sudo chown vscode:vscode /home/vscode/go/src || true
 sudo chown vscode:vscode /home/vscode/go/src/github.com || true
 
 # download dependencies and do first-pass compile
-CI=1 kit pre-up
+CI=1 kit -W pre-up
 
 # Patch CoreDNS to have host.docker.internal inside the cluster available
 kubectl get cm coredns -n kube-system -o yaml | sed "s/  NodeHosts: |/  NodeHosts: |\n    `grep host.docker.internal /etc/hosts`/" | kubectl apply -f -

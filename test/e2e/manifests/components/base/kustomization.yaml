@@ -12,3 +12,10 @@ patches:
 - path: workflow-controller-deployment.yaml
 - path: workflow-controller-cluster-workflow-template-rbac.yaml
 - path: minio-deployment.yaml
+- # change all services to type LoadBalancer so they can be accessed without port forwarding
+  patch: |-
+    - op: replace
+      path: /spec/type
+      value: LoadBalancer
+  target:
+    kind: Service

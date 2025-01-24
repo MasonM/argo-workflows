@@ -1,5 +1,8 @@
 {
-  "image": "mcr.microsoft.com/vscode/devcontainers/base:ubuntu",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
   "appPort": 8080,
   "features": {
     "ghcr.io/devcontainers/features/go:1": {
@@ -24,11 +27,13 @@
     "--add-host=azurite:127.0.0.1"
   ],
   "postCreateCommand": ".devcontainer/pre-build.sh",
+  "postStartCommand": "service k3s start",
   "workspaceMount": "source=${localWorkspaceFolder},target=/home/vscode/go/src/github.com/argoproj/argo-workflows,type=bind",
   "workspaceFolder": "/home/vscode/go/src/github.com/argoproj/argo-workflows",
   "remoteEnv": {
     "PATH": "${containerEnv:PATH}:/home/vscode/go/bin",
-    "GOPATH": "/home/vscode/go"
+    "GOPATH": "/home/vscode/go",
+    "KUBECONFIG": "/home/vscode/.kubeconfig"
   },
   "customizations": {
     "vscode": {

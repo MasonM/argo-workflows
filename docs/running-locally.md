@@ -2,12 +2,12 @@
 
 You have two options:
 
-1. Use the [Dev Container](#development-container). This takes about 7 minutes. This can be used with VSCode, the `devcontainer` CLI, or GitHub Codespaces.
+1. Use the [Dev Container](#development-container). This takes about 7 minutes and creates a fully self-contained container that closely matches our CI configuration. This can be used with VSCode, the `devcontainer` CLI, or GitHub Codespaces.
 1. Install the [requirements](#requirements) on your computer manually. This takes about 1 hour.
 
 ## Development Container
 
-The development container should be able to do everything you need to do to develop Argo Workflows without installing tools on your local machine. It takes quite a long time to build the container. It runs `k3d` inside the container so you have a cluster to test against. To communicate with services running either in other development containers or directly on the local machine (e.g. a database), the following URL can be used in the workflow spec: `host.docker.internal:<PORT>`. This facilitates the implementation of workflows which need to connect to a database or an API server.
+The development container should be able to do everything you need to do to develop Argo Workflows without installing tools on your local machine. It takes quite a long time to build the container. It runs [k3s](https://docs.k3s.io/) inside the container so you have a cluster to test against. To communicate with services running either in other development containers or directly on the local machine (e.g. a database), the following URL can be used in the workflow spec: `host.docker.internal:<PORT>`. This facilitates the implementation of workflows which need to connect to a database or an API server.
 
 You can use the development container in a few different ways:
 
@@ -32,9 +32,6 @@ Note:
 * For **Windows WSL2**
     * Configure [`.wslconfig`](https://docs.microsoft.com/en-us/windows/wsl/wsl-config#configuration-setting-for-wslconfig) to limit memory usage by the WSL2 to prevent VSCode OOM.
 
-* For **Linux**
-    * Use [Docker Desktop](https://docs.docker.com/desktop/linux/install/) instead of [Docker Engine](https://docs.docker.com/engine/install/) to prevent incorrect network configuration by k3d.
-
 ## Requirements
 
 Clone the Git repo into: `$GOPATH/src/github.com/argoproj/argo-workflows`. Any other path will break the code generation.
@@ -56,13 +53,13 @@ To build on your own machine without using the Dev Container you will need:
 * [Docker](https://docs.docker.com/get-docker/)
 * [`protoc`](http://google.github.io/proto-lens/installing-protoc.html)
 * [`node`](https://nodejs.org/download/release/latest-v16.x/) for running the UI
-* A local Kubernetes cluster ([`k3d`](https://k3d.io/), [`kind`](https://kind.sigs.k8s.io/docs/user/quick-start/#installation), or [`minikube`](https://minikube.sigs.k8s.io/docs/start/))
+* A local Kubernetes cluster that supports `LoadBalancer` services ([`k3d`](https://k3d.io/), [`kind`](https://kind.sigs.k8s.io/docs/user/quick-start/#installation), or [`minikube`](https://minikube.sigs.k8s.io/docs/start/))
 
 We recommend using [K3D](https://k3d.io/) to set up the local Kubernetes cluster since this will allow you to test RBAC
 set-up and is fast. You can set-up K3D to be part of your default kube config as follows:
 
 ```bash
-k3d cluster start --wait
+k3d cluster create --wait -p 3306:3306 -p 5432:5432 -p 5556:5556 -p 9000:9000 -p 9001:9001 -p 9091:9091 -p 9100:9100 -p 10000:10000
 ```
 
 Alternatively, you can use [Minikube](https://github.com/kubernetes/minikube) to set up the local Kubernetes cluster.
