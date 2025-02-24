@@ -19,6 +19,9 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - name: Determine release branch
+        run: git branch --remotes --contains HEAD --format 'branch=%(refname:lstrip=-1)' >> "$GITHUB_OUTPUT"
+        id: calc-branch
       - run: ./hack/docs/tested-versions.sh > docs/tested-kubernetes-versions.md
       - uses: peter-evans/create-pull-request@a4f52f8033a6168103c2538976c07b467e8163bc # v6.0.1
         with:
@@ -26,3 +29,4 @@ jobs:
           commit-message: 'docs: update tested version for ${{ github.ref_name }}'
           branch: create-pull-request/tested-versions
           signoff: true
+          base: ${{ steps.calc-branch.branch }}
