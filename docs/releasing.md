@@ -53,10 +53,14 @@ git push upstream v3.3.4 # or origin if you do not use upstream
 GitHub Actions will automatically build and publish your release. This takes about 1h. Set your self a reminder to check
 this was successful.
 
-## Update Changelog
+## Update Changelog and Tested Versions
 
-Once the tag is published, GitHub Actions will automatically open a PR to update the changelog. Once the PR is ready,
-you can approve it, enable auto-merge, and then run the following to force trigger the CI build:
+Once the tag is published, GitHub Actions will automatically open two PRs:
+
+1. PR against the `main` branch to update the changelog.
+2. PR against the release branch to update [the "Tested Versions" table](releases.md#tested-versions).
+
+Once the PRs are ready, you can approve them, enable auto-merge, and then run the following to force trigger the CI build:
 
 ```bash
 git branch -D create-pull-request/changelog
