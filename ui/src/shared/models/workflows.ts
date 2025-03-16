@@ -212,9 +212,9 @@ export interface Parameter {
      */
     description?: string;
     /**
-     * Multi is a boolean which decides whether value should be interpreted as a multi-select, or as a single-select
+     * MultiSeparator, if defined, will cause the value to interpreted by the UI as a multi-select with the given delimiter
      */
-    multi?: boolean;
+    multiSeparator?: string;
 }
 
 /**

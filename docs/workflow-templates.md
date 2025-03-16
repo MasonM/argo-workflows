@@ -360,8 +360,8 @@ spec:
 
 In case the user would like to use a multi-select dropdown, the same setup as above remains, you just need to:
 
-- Add a field named `multi: true`
-- Using the value still as a string, but with a `,` delimiter with the options you choose, without spaces before or after the delimiter.
+- Add a field named `multiSeparator: ","`
+- Using the value still as a string, but with a `,` delimiter with the options you choose.
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -373,7 +373,7 @@ spec:
   arguments:
     parameters:
       - name: message
-        multi: true
+        multiSeparator: ","
         value: one,two
         enum:
           - one

@@ -907,8 +907,8 @@ type Parameter struct {
 	// Description is the parameter description
 	Description *AnyString `json:"description,omitempty" protobuf:"bytes,7,opt,name=description"`
 
-	// Multi is a boolean which decides whether value should be interpreted as a multi-select, or as a single-select
-	Multi bool `json:"multi,omitempty" protobuf:"bytes,8,opt,name=multi"`
+	// MultiSeparator, if defined, will cause the value to interpreted a multi-select with the given delimiter
+	MultiSeparator string `json:"multiSeparator,omitempty" protobuf:"bytes,8,opt,name=multiSeparator"`
 }
 
 // ValueFrom describes a location in which to obtain the value to a parameter

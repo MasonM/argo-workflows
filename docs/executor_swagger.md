@@ -2541,7 +2541,7 @@ be cluster-scoped, so there is no namespace field.
 | description | [AnyString](#any-string)| `AnyString` |  | |  |  |
 | enum | [][AnyString](#any-string)| `[]AnyString` |  | | Enum holds a list of string values to choose from, for the actual value of the parameter |  |
 | globalName | string| `string` |  | | GlobalName exports an output parameter to the global scope, making it available as</br>'{{workflow.outputs.parameters.XXXX}} and in workflow.status.outputs.parameters |  |
-| multi | boolean| `bool` |  | | Multi is a boolean which decides whether value should be interpreted as a multi-select, or as a single-select |  |
+| multiSeparator | string| `string` |  | | MultiSeparator, if defined, will cause the value to interpreted a multi-select with the given delimiter |  |
 | name | string| `string` |  | | Name is the parameter name |  |
 | value | [AnyString](#any-string)| `AnyString` |  | |  |  |
 | valueFrom | [ValueFrom](#value-from)| `ValueFrom` |  | |  |  |

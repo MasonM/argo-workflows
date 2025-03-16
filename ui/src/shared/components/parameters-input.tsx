@@ -28,8 +28,8 @@ export function ParametersInput(props: ParametersInputProps) {
 
     function displaySelectFieldForEnumValues(parameter: Parameter) {
         let value: string | string[] = getValueFromParameter(parameter);
-        if (parameter.multi && typeof value === 'string') {
-            value = value.split(',');
+        if (parameter.multiSeparator && typeof value === 'string') {
+            value = value.split(parameter.multiSeparator);
         }
 
         return (
@@ -40,9 +40,9 @@ export function ParametersInput(props: ParametersInputProps) {
                     value,
                     title: value
                 }))}
-                multiSelect={!!parameter.multi}
+                multiSelect={!!parameter.multiSeparator}
                 onChange={e => onParameterChange(parameter, e.value)}
-                onMultiChange={e => onParameterChange(parameter, e.join(','))}
+                onMultiChange={e => onParameterChange(parameter, e.join(parameter.multiSeparator))}
             />
         );
     }

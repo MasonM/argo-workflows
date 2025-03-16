@@ -1053,8 +1053,8 @@ spec:
                           type: array
                         globalName:
                           type: string
-                        multi:
-                          type: boolean
+                        multiSeparator:
+                          type: string
                         name:
                           type: string
                         value:
@@ -1750,8 +1750,8 @@ spec:
                                 type: array
                               globalName:
                                 type: string
-                              multi:
-                                type: boolean
+                              multiSeparator:
+                                type: string
                               name:
                                 type: string
                               value:
@@ -5123,8 +5123,8 @@ spec:
                                         type: array
                                       globalName:
                                         type: string
-                                      multi:
-                                        type: boolean
+                                      multiSeparator:
+                                        type: string
                                       name:
                                         type: string
                                       value:
@@ -5765,8 +5765,8 @@ spec:
                                               type: array
                                             globalName:
                                               type: string
-                                            multi:
-                                              type: boolean
+                                            multiSeparator:
+                                              type: string
                                             name:
                                               type: string
                                             value:
@@ -7794,8 +7794,8 @@ spec:
                               type: array
                             globalName:
                               type: string
-                            multi:
-                              type: boolean
+                            multiSeparator:
+                              type: string
                             name:
                               type: string
                             value:
@@ -8530,8 +8530,8 @@ spec:
                               type: array
                             globalName:
                               type: string
-                            multi:
-                              type: boolean
+                            multiSeparator:
+                              type: string
                             name:
                               type: string
                             value:
@@ -11238,8 +11238,8 @@ spec:
                                       type: array
                                     globalName:
                                       type: string
-                                    multi:
-                                      type: boolean
+                                    multiSeparator:
+                                      type: string
                                     name:
                                       type: string
                                     value:
@@ -11874,8 +11874,8 @@ spec:
                                             type: array
                                           globalName:
                                             type: string
-                                          multi:
-                                            type: boolean
+                                          multiSeparator:
+                                            type: string
                                           name:
                                             type: string
                                           value:
@@ -15812,8 +15812,8 @@ spec:
                                           type: array
                                         globalName:
                                           type: string
-                                        multi:
-                                          type: boolean
+                                        multiSeparator:
+                                          type: string
                                         name:
                                           type: string
                                         value:
@@ -16454,8 +16454,8 @@ spec:
                                                 type: array
                                               globalName:
                                                 type: string
-                                              multi:
-                                                type: boolean
+                                              multiSeparator:
+                                                type: string
                                               name:
                                                 type: string
                                               value:
@@ -18483,8 +18483,8 @@ spec:
                                 type: array
                               globalName:
                                 type: string
-                              multi:
-                                type: boolean
+                              multiSeparator:
+                                type: string
                               name:
                                 type: string
                               value:
@@ -19219,8 +19219,8 @@ spec:
                                 type: array
                               globalName:
                                 type: string
-                              multi:
-                                type: boolean
+                              multiSeparator:
+                                type: string
                               name:
                                 type: string
                               value:
@@ -21927,8 +21927,8 @@ spec:
                                         type: array
                                       globalName:
                                         type: string
-                                      multi:
-                                        type: boolean
+                                      multiSeparator:
+                                        type: string
                                       name:
                                         type: string
                                       value:
@@ -22563,8 +22563,8 @@ spec:
                                               type: array
                                             globalName:
                                               type: string
-                                            multi:
-                                              type: boolean
+                                            multiSeparator:
+                                              type: string
                                             name:
                                               type: string
                                             value:

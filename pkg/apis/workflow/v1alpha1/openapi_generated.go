@@ -4882,10 +4882,10 @@ func schema_pkg_apis_workflow_v1alpha1_Parameter(ref common.ReferenceCallback) c
 							Format:      "",
 						},
 					},
-					"multi": {
+					"multiSeparator": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Multi is a boolean which decides whether value should be interpreted as a multi-select, or as a single-select",
-							Type:        []string{"boolean"},
+							Description: "MultiSeparator, if defined, will cause the value to interpreted a multi-select with the given delimiter",
+							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
