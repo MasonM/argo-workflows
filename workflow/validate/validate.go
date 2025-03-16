@@ -900,26 +900,8 @@ func validateArgumentsValues(prefix string, arguments wfv1.Arguments, allowEmpty
 			}
 		}
 		// validate enum
-		if param.Enum != nil {
-			if len(param.Enum) == 0 {
-				return errors.Errorf(errors.CodeBadRequest, "%s%s.enum should contain at least one value", prefix, param.Name)
-			}
-			if param.Value == nil {
-				if allowEmptyValues {
-					return nil
-				}
-				return errors.Errorf(errors.CodeBadRequest, "%s%s.value is required", prefix, param.Name)
-			}
-			valueSpecifiedInEnumList := false
-			for _, enum := range param.Enum {
-				if enum == *param.Value {
-					valueSpecifiedInEnumList = true
-					break
-				}
-			}
-			if !valueSpecifiedInEnumList {
-				return errors.Errorf(errors.CodeBadRequest, "%s%s.value should be present in %s%s.enum list", prefix, param.Name, prefix, param.Name)
-			}
+		if err := validateArgumentEnum(prefix, param, allowEmptyValues); err != nil {
+			return err
 		}
 	}
 	for _, art := range arguments.Artifacts {
@@ -928,6 +910,41 @@ func validateArgumentsValues(prefix string, arguments wfv1.Arguments, allowEmpty
 		}
 		if art.From != "" && art.FromExpression != "" {
 			return errors.Errorf(errors.CodeBadRequest, "%s%s shouldn't have both `from` and `fromExpression` in Artifact", prefix, art.Name)
+		}
+	}
+	return nil
+}
+
+func validateArgumentEnum(prefix string, param wfv1.Parameter, allowEmptyValues bool) error {
+	if param.Enum == nil {
+		return nil
+	}
+	if len(param.Enum) == 0 {
+		return errors.Errorf(errors.CodeBadRequest, "%s%s.enum should contain at least one value", prefix, param.Name)
+	}
+
+	if param.Value == nil {
+		if allowEmptyValues {
+			return nil
+		}
+		return errors.Errorf(errors.CodeBadRequest, "%s%s.value is required", prefix, param.Name)
+	}
+
+	var values []string
+	if param.MultiSeparator != "" {
+		values = strings.Split(param.Value.String(), param.MultiSeparator)
+	} else {
+		values = []string{param.Value.String()}
+	}
+
+	enumSet := make(map[string]bool)
+	for _, enum := range param.Enum {
+		enumSet[enum.String()] = true
+	}
+
+	for _, value := range values {
+		if _, ok := enumSet[value]; !ok {
+			return errors.Errorf(errors.CodeBadRequest, "%s%s.value should be present in %s%s.enum list", prefix, param.Name, prefix, param.Name)
 		}
 	}
 	return nil
