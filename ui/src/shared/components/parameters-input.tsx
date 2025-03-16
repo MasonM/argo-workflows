@@ -42,7 +42,7 @@ export function ParametersInput(props: ParametersInputProps) {
                 }))}
                 multiSelect={!!parameter.multiSeparator}
                 onChange={e => onParameterChange(parameter, e.value)}
-                onMultiChange={e => onParameterChange(parameter, e.join(parameter.multiSeparator))}
+                onMultiChange={e => onParameterChange(parameter, e.map(v => v.value).join(parameter.multiSeparator))}
             />
         );
     }
@@ -61,7 +61,7 @@ export function ParametersInput(props: ParametersInputProps) {
                             <i className='fa fa-question-circle' style={{marginLeft: 4}} />
                         </Tooltip>
                     )}
-                    {(parameter.enum && displaySelectFieldForEnumValues(parameter)) || displayInputFieldForSingleValue(parameter)}
+                    {parameter.enum ? displaySelectFieldForEnumValues(parameter) : displayInputFieldForSingleValue(parameter)}
                 </div>
             ))}
         </>

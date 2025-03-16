@@ -915,6 +915,7 @@ func validateArgumentsValues(prefix string, arguments wfv1.Arguments, allowEmpty
 	return nil
 }
 
+// TODO: Add tests
 func validateArgumentEnum(prefix string, param wfv1.Parameter, allowEmptyValues bool) error {
 	if param.Enum == nil {
 		return nil
