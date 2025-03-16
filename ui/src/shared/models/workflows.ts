@@ -190,7 +190,7 @@ export interface Parameter {
     /**
      * Default is the default value to use for an input parameter if a value was not supplied
      */
-    default?: string | string[];
+    default?: string;
     /**
      * Name is the parameter name
      */
@@ -198,7 +198,7 @@ export interface Parameter {
     /**
      * Value is the literal value to use for the parameter. If specified in the context of an input parameter, any passed values take precedence over the specified value
      */
-    value?: string | string[];
+    value?: string;
     /**
      * ValueFrom is the source for the output parameter's value
      */

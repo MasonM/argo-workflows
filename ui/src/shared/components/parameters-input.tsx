@@ -5,12 +5,11 @@ import React from 'react';
 import {Parameter} from '../models';
 
 export function getValueFromParameter(p: Parameter) {
-    const value = p.value === undefined ? p.default : p.value;
-    if (p.multi && typeof value === 'string') {
-        return value.split(',');
+    if (p.value === undefined) {
+        return p.default;
+    } else {
+        return p.value;
     }
-
-    return value;
 }
 
 interface ParametersInputProps {
@@ -19,7 +18,7 @@ interface ParametersInputProps {
 }
 
 export function ParametersInput(props: ParametersInputProps) {
-    function onParameterChange(parameter: Parameter, value: string | string[]) {
+    function onParameterChange(parameter: Parameter, value: string) {
         const newParameters: Parameter[] = props.parameters.map(p => ({
             ...p,
             value: p.name === parameter.name ? value : getValueFromParameter(p)
@@ -28,22 +27,22 @@ export function ParametersInput(props: ParametersInputProps) {
     }
 
     function displaySelectFieldForEnumValues(parameter: Parameter) {
+        let value: string | string[] = getValueFromParameter(parameter);
+        if (parameter.multi && typeof value === 'string') {
+            value = value.split(',');
+        }
+
         return (
             <Select
                 key={parameter.name}
-                value={getValueFromParameter(parameter)}
+                value={value}
                 options={parameter.enum.map(value => ({
                     value,
                     title: value
                 }))}
                 multiSelect={!!parameter.multi}
                 onChange={e => onParameterChange(parameter, e.value)}
-                onMultiChange={e =>
-                    onParameterChange(
-                        parameter,
-                        e.map(v => v.value)
-                    )
-                }
+                onMultiChange={e => onParameterChange(parameter, e.join(','))}
             />
         );
     }
