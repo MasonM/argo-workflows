@@ -38,9 +38,7 @@ jobs:
 
       - name: Build and push dev container cache image
         uses: devcontainers/ci@8bf61b26e9c3a98f69cb6ce2f88d24ff59b785c6 # v0.3
-        env:
-          CACHE_IMAGE: ghcr.io/${{ github.repository_owner }}/argo-workflows-devcontainer:latest
         with:
           push: never
-          cacheFrom: type=registry,ref=${{ env.CACHE_IMAGE }}
-          cacheTo: type=registry,ref=${{ env.CACHE_IMAGE }},compression=zstd,mode=max
+          cacheTo: type=registry,ref=ghcr.io/${{ github.repository_owner }}/argo-workflows-devcontainer:latest,compression=zstd,mode=max
+          platform: linux/amd64,linux/arm64
