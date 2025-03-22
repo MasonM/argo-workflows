@@ -2,12 +2,12 @@
 
 You have two options:
 
-1. Use the [Dev Container](#development-container). This takes about 7 minutes. This can be used with VSCode, the `devcontainer` CLI, or GitHub Codespaces.
+1. Use the [Dev Container](#development-container). This is fully automated and typically takes less than a minute using the pre-built image. It can be used with VSCode, the `devcontainer` CLI, or GitHub Codespaces.
 1. Install the [requirements](#requirements) on your computer manually. This takes about 1 hour.
 
 ## Development Container
 
-The development container should be able to do everything you need to do to develop Argo Workflows without installing tools on your local machine. It takes quite a long time to build the container. It runs `k3d` inside the container so you have a cluster to test against. To communicate with services running either in other development containers or directly on the local machine (e.g. a database), the following URL can be used in the workflow spec: `host.docker.internal:<PORT>`. This facilitates the implementation of workflows which need to connect to a database or an API server.
+The development container should have everything you need to develop Argo Workflows without installing tools on your local machine. It runs `k3d` inside the container so you have a cluster to test against. To communicate with services running either in other development containers or directly on the local machine (e.g. a database), the following URL can be used in the workflow spec: `host.docker.internal:<PORT>`. This facilitates the implementation of workflows which need to connect to a database or an API server.
 
 You can use the development container in a few different ways:
 

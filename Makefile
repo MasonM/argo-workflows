@@ -33,6 +33,12 @@ DOCKER_PUSH           ?= false
 TARGET_PLATFORM       ?= linux/$(shell go env GOARCH)
 K3D_CLUSTER_NAME      ?= k3s-default # declares which cluster to import to in case it's not the default name
 
+# -- dev container options
+DEVCONTAINER_FLAGS ?= --workspace-folder . --platform $(TARGET_PLATFORM) --output type=cacheonly
+ifeq ($(DEVCONTAINER_EXPORT_CACHE),true)
+DEVCONTAINER_FLAGS += --cache-to type=registry,ref=ghcr.io/masonm/argo-workflows-devcontainer:cache,compression=zstd,force-compression=true,mode=max
+endif
+
 # -- test options
 E2E_WAIT_TIMEOUT      ?= 90s # timeout for wait conditions
 E2E_PARALLEL          ?= 20
@@ -116,6 +122,7 @@ TOOL_CLANG_FORMAT           := /usr/local/bin/clang-format
 TOOL_MDSPELL                := $(NVM_BIN)/mdspell
 TOOL_MARKDOWN_LINK_CHECK    := $(NVM_BIN)/markdown-link-check
 TOOL_MARKDOWNLINT           := $(NVM_BIN)/markdownlint
+TOOL_DEVCONTAINER           := $(NVM_BIN)/devcontainer
 TOOL_MKDOCS_DIR             := $(HOME)/.venv/mkdocs
 TOOL_MKDOCS                 := $(TOOL_MKDOCS_DIR)/bin/mkdocs
 
@@ -818,3 +825,12 @@ release-notes: /dev/null
 .PHONY: checksums
 checksums:
 	sha256sum ./dist/argo-*.gz | awk -F './dist/' '{print $$1 $$2}' > ./dist/argo-workflows-cli-checksums.txt
+
+# dev container
+
+$(TOOL_DEVCONTAINER): Makefile
+	npm list -g @devcontainers/cli@0.75.0 > /dev/null || npm i -g @devcontainers/cli@0.75.0
+
+.PHONY: devcontainer-build
+devcontainer-build: $(TOOL_DEVCONTAINER)
+	devcontainer build $(DEVCONTAINER_FLAGS)

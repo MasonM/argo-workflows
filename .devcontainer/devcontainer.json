@@ -1,7 +1,13 @@
 {
-  // TODO: Bump to ubuntu-24.04 once Python issues are fixed: https://github.com/argoproj/argo-workflows/pull/14302#issuecomment-2742883052
-  "image": "mcr.microsoft.com/vscode/devcontainers/base:ubuntu-22.04",
-  "appPort": 8080,
+  "name": "Argo Workflows",
+
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "..",
+    "cacheFrom": "ghcr.io/masonm/argo-workflows-devcontainer:cache",
+    "args": { "BUILDKIT_INLINE_CACHE": "0" }
+  },
+
   "features": {
     "ghcr.io/devcontainers/features/go:1": {
       "version": "1.23"
@@ -36,20 +42,20 @@
       "settings": {
         "launch": {
           "configurations": [
-              {
-                  "name": "Attach to argo server",
-                  "type": "go",
-                  "request": "attach",
-                  "mode": "local",
-                  "processId": "argo"
-              },
-              {
-                  "name": "Attach to workflow controller",
-                  "type": "go",
-                  "request": "attach",
-                  "mode": "local",
-                  "processId": "workflow-controller"
-              }
+            {
+              "name": "Attach to argo server",
+              "type": "go",
+              "request": "attach",
+              "mode": "local",
+              "processId": "argo"
+            },
+            {
+              "name": "Attach to workflow controller",
+              "type": "go",
+              "request": "attach",
+              "mode": "local",
+              "processId": "workflow-controller"
+            }
           ]
         }
       }
