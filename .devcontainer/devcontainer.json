@@ -2,7 +2,7 @@
   "build": {
     "dockerfile": "Dockerfile",
     "context": "..",
-    "cacheFrom": "type=registry,ref=ghcr.io/MasonM/argo-workflows-devcontainer:latest"
+    "cacheFrom": "type=registry,ref=ghcr.io/masonm/argo-workflows-devcontainer:latest"
   },
   "appPort": 8080,
   "features": {

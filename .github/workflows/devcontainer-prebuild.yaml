@@ -39,7 +39,7 @@ jobs:
       - name: Build and push dev container cache image
         uses: devcontainers/ci@v0.3
         env:
-          CACHE_IMAGE: ghcr.io/MasonM/argo-workflows-devcontainer:latest
+          CACHE_IMAGE: ghcr.io/masonm/argo-workflows-devcontainer:latest
         with:
           push: never
           cacheFrom: type=registry,ref=${{ env.CACHE_IMAGE }}
