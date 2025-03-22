@@ -18,20 +18,21 @@ jobs:
   build_devcontainer:
     #if: github.repository == 'argoproj/argo-workflows'
     runs-on: ubuntu-24.04
+    env:
+       REGISTRY: ghcr.io
+       #CACHE_IMAGE: ${{ env.REGISTRY }}/${{ github.repository_owner }}/argo-workflows-devcontainer:latest
+       CACHE_IMAGE: ${{ env.REGISTRY }}/masonm/argo-workflows-devcontainer:latest
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
+      - uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226 # v3.0.0
+      - uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
         with:
-          registry: ghcr.io
+          registry: ${{ env.REGISTRY }}
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Build and push cache image
         uses: devcontainers/ci@8bf61b26e9c3a98f69cb6ce2f88d24ff59b785c6 # v0.3
         with:
           push: never
-          #cacheTo: type=registry,ref=ghcr.io/${{ github.repository_owner }}/argo-workflows-devcontainer:latest,compression=zstd,force-compression=true,mode=max
-          cacheTo: type=registry,ref=ghcr.io/masonm/argo-workflows-devcontainer:latest,compression=zstd,force-compression=true,mode=max
+          cacheTo: type=registry,ref=${{ env.CACHE_IMAGE }},compression=zstd,force-compression=true,mode=max
           platform: linux/amd64,linux/arm64
