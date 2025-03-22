@@ -11,7 +11,5 @@ RUN wget -q -O - https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | 
 RUN apt-get update && apt-get install -y protobuf-compiler clang-format
 
 # install kubectl
-RUN --mount=type=bind,source=hack/k8s-versions.sh,target=k8s-versions.sh \
-  . k8s-versions.sh && \
-  wget -O /usr/local/bin/kubectl "https://dl.k8s.io/release/${K8S_VERSIONS[min]}/bin/linux/${TARGETARCH}/kubectl" && \
+RUN wget -O /usr/local/bin/kubectl "https://dl.k8s.io/release/v1.30.9/bin/linux/${TARGETARCH}/kubectl" && \
   chmod +x /usr/local/bin/kubectl
