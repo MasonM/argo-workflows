@@ -29,6 +29,7 @@ jobs:
       - name: Build and push cache image
         uses: devcontainers/ci@8bf61b26e9c3a98f69cb6ce2f88d24ff59b785c6 # v0.3
         with:
-          cacheTo: type=registry,ref=ghcr.io/masonm/argo-workflows-devcontainer:latest,compression=zstd,force-compression=true,mode=max
+          configFile: .devcontainer/build/devcontainer.json
+          imageName: ghcr.io/masonm/argo-workflows-devcontainer
           #platform: linux/amd64,linux/arm64
           platform: linux/amd64
