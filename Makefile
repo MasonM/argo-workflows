@@ -32,7 +32,6 @@ IMAGE_NAMESPACE       ?= quay.io/argoproj
 DOCKER_PUSH           ?= false
 TARGET_PLATFORM       ?= linux/$(shell go env GOARCH)
 K3D_CLUSTER_NAME      ?= k3s-default # declares which cluster to import to in case it's not the default name
-DEVCONTAINER_IMAGE    ?= $(shell jq -r '.image' .devcontainer/devcontainer.json)
 
 # -- test options
 E2E_WAIT_TIMEOUT      ?= 90s # timeout for wait conditions
@@ -796,17 +795,3 @@ release-notes: /dev/null
 .PHONY: checksums
 checksums:
 	sha256sum ./dist/argo-*.gz | awk -F './dist/' '{print $$1 $$2}' > ./dist/argo-workflows-cli-checksums.txt
-
-# dev container
-
-/usr/local/bin/devcontainer: Makefile
-	npm list -g @devcontainers/cli@0.75.0 > /dev/null || npm i -g @devcontainers/cli@0.75.0
-
-.PHONY: devcontainer-build
-devcontainer-build: /usr/local/bin/devcontainer
-	devcontainer build \
-		--workspace-folder $(CURDIR)/.github \
-		--platform linux/amd64,linux/arm64 \
-		--output type=registry,compression=zstd,force-compression=true,oci-mediatypes=true \
-		--image-name $(DEVCONTAINER_IMAGE) \
-		--cache-from $(DEVCONTAINER_IMAGE)
