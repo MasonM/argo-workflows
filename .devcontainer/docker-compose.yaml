@@ -5,11 +5,9 @@ services:
     build:
       dockerfile: .devcontainer/Dockerfile
       context: ../
-      cache_from:
-        - ghcr.io/masonm/argo-workflows-devcontainer:latest
       platforms:
         - linux/amd64
-        - linux/arm64
+      #  - linux/arm64
     volumes:
       - type: bind
         source: ..
