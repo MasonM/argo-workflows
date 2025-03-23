@@ -32,6 +32,7 @@ IMAGE_NAMESPACE       ?= quay.io/argoproj
 DOCKER_PUSH           ?= false
 TARGET_PLATFORM       ?= linux/$(shell go env GOARCH)
 K3D_CLUSTER_NAME      ?= k3s-default # declares which cluster to import to in case it's not the default name
+DEVCONTAINER_IMAGE    ?= $(shell jq -r '.image' .devcontainer/devcontainer.json)
 
 # -- test options
 E2E_WAIT_TIMEOUT      ?= 90s # timeout for wait conditions
@@ -803,6 +804,9 @@ checksums:
 
 .PHONY: devcontainer-build
 devcontainer-build: /usr/local/bin/devcontainer
-	# Can't use "--push" due to https://github.com/devcontainers/cli/issues/404, so we need to push the image manually
-	devcontainer build --workspace-folder $(CURDIR)
-	docker compose -f .devcontainer/docker-compose.yaml push
+	devcontainer build \
+		--workspace-folder $(CURDIR)/.github \
+		--platform linux/amd64,linux/arm64 \
+		--output type=registry,compression=zstd,force-compression=true,oci-mediatypes=true \
+		--image-name $(DEVCONTAINER_IMAGE) \
+		--cache-from $(DEVCONTAINER_IMAGE)
