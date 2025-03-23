@@ -7,7 +7,7 @@ SHELL ["/bin/bash", "-c"]
 # install k3d
 RUN wget -q -O - https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | TAG=${K3D_VERSION} bash
 
-# install protocol buffer compiler (protoc)
+# install protocol buffer tools
 RUN apt-get update && apt-get install -y protobuf-compiler clang-format
 
 # install kubectl
