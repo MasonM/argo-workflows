@@ -2,9 +2,15 @@ name: Dev Container
 
 on:
   push:
+    paths:
+      - ".devcontainer/**"
+      - "hack/k8s-versions.sh"
     branches:
       - main
   pull_request:
+    paths:
+      - ".devcontainer/**"
+      - "hack/k8s-versions.sh"
     branches:
       - main
 
@@ -17,7 +23,7 @@ permissions:
   packages: write
 
 jobs:
-  build_devcontainer:
+  build:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
