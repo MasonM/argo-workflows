@@ -1,0 +1,21 @@
+services:
+  app:
+    image: ghcr.io/masonm/argo-workflows-devcontainer:latest
+    pull_policy: always
+    build:
+      dockerfile: .devcontainer/Dockerfile
+      context: ../
+      platforms:
+        - linux/amd64
+      #  - linux/arm64
+    volumes:
+      - type: bind
+        source: ..
+        target: /home/vscode/go/src/github.com/argoproj/argo-workflows
+    extra_hosts:
+      host.docker.internal: "host-gateway"
+      dex: "127.0.0.1"
+      minio: "127.0.0.1"
+      postgres: "127.0.0.1"
+      mysql: "127.0.0.1"
+      azurite: "127.0.0.1"
