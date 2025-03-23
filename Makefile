@@ -805,4 +805,4 @@ checksums:
 devcontainer-build: /usr/local/bin/devcontainer
 	# Can't use "--push" due to https://github.com/devcontainers/cli/issues/404, so we need to push the image manually
 	devcontainer build --workspace-folder $(CURDIR)
-	docker compose -f .devcontainer/docker-compose.yaml push
+	docker compose -f .devcontainer/docker-compose.yaml push -q
