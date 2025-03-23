@@ -807,7 +807,7 @@ devcontainer-build: /usr/local/bin/devcontainer
 	devcontainer build \
 		--workspace-folder $(CURDIR) \
 		--config .github/.devcontainer/devcontainer.json \
-		--platform linux/amd64 \
+		--platform linux/amd64,linux/arm64 \
 		--output type=registry,compression=zstd,force-compression=true,oci-mediatypes=true \
 		--image-name $(DEVCONTAINER_IMAGE) \
 		--cache-from $(DEVCONTAINER_IMAGE)
