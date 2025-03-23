@@ -805,8 +805,7 @@ checksums:
 .PHONY: devcontainer-build
 devcontainer-build: /usr/local/bin/devcontainer
 	devcontainer build \
-		--workspace-folder $(CURDIR) \
-		--config .github/.devcontainer/devcontainer.json \
+		--workspace-folder $(CURDIR)/.github \
 		--platform linux/amd64,linux/arm64 \
 		--output type=registry,compression=zstd,force-compression=true,oci-mediatypes=true \
 		--image-name $(DEVCONTAINER_IMAGE) \
