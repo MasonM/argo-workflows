@@ -39,7 +39,6 @@ jobs:
       - name: Build dev container image
         uses: devcontainers/ci@8bf61b26e9c3a98f69cb6ce2f88d24ff59b785c6 # v0.3
         with:
-          imageName: ghcr.io/masonm/argo-workflows-devcontainer
-          configFile: .devcontainer/devcontainer-build.json
-          refFilterForPush: refs/heads/main
-          platform: linux/amd64,linux/arm64
+          cacheTo: type=registry,ref=ghcr.io/masonm/argo-workflows-devcontainer:cache,compression=zstd,force-compression=true,mode=max
+          push: never
+          platform: linux/amd64
