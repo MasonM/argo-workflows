@@ -12,8 +12,5 @@ sudo chown vscode:vscode /home/vscode/go || true
 sudo chown vscode:vscode /home/vscode/go/src || true
 sudo chown vscode:vscode /home/vscode/go/src/github.com || true
 
-# install kit
-make kit
-
 # Patch CoreDNS to have host.docker.internal inside the cluster available
 kubectl get cm coredns -n kube-system -o yaml | sed "s/  NodeHosts: |/  NodeHosts: |\n    `grep host.docker.internal /etc/hosts`/" | kubectl apply -f -
