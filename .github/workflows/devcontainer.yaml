@@ -44,4 +44,4 @@ jobs:
         env:
           #TARGET_PLATFORM: linux/amd64,linux/arm64
           TARGET_PLATFORM: linux/amd64
-          DEVCONTAINER_EXPORT_CACHE: ${{ github.event_name == 'push' && 'true' || 'false' }}
+          DEVCONTAINER_PUSH: ${{ github.event_name == 'push' && 'true' || 'false' }}

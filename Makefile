@@ -34,9 +34,14 @@ TARGET_PLATFORM       ?= linux/$(shell go env GOARCH)
 K3D_CLUSTER_NAME      ?= k3s-default # declares which cluster to import to in case it's not the default name
 
 # -- dev container options
-DEVCONTAINER_FLAGS ?= --workspace-folder . --platform $(TARGET_PLATFORM) --output type=cacheonly
-ifeq ($(DEVCONTAINER_EXPORT_CACHE),true)
-DEVCONTAINER_FLAGS += --cache-to type=registry,ref=ghcr.io/masonm/argo-workflows-devcontainer:cache,compression=zstd,force-compression=true,mode=max
+DEVCONTAINER_PUSH     ?= false
+DEVCONTAINER_IMAGE    ?= ghcr.io/masonm/argo-workflows-devcontainer
+ifeq ($(DEVCONTAINER_PUSH),true)
+DEVCONTAINER_EXPORTER_COMMON_FLAGS ?= type=registry,compression=zstd,force-compression=true,oci-mediatypes=true
+DEVCONTAINER_FLAGS    ?= --output $(DEVCONTAINER_EXPORTER_COMMON_FLAGS) \
+	--cache-to $(DEVCONTAINER_EXPORTER_COMMON_FLAGS),ref=$(DEVCONTAINER_IMAGE):cache,mode=max
+else
+DEVCONTAINER_FLAGS    ?= --output type=cacheonly
 endif
 
 # -- test options
@@ -833,4 +838,9 @@ $(TOOL_DEVCONTAINER): Makefile
 
 .PHONY: devcontainer-build
 devcontainer-build: $(TOOL_DEVCONTAINER)
-	devcontainer build $(DEVCONTAINER_FLAGS)
+	devcontainer build \
+		--workspace-folder . \
+		--config .devcontainer/builder/devcontainer.json \
+		--platform $(TARGET_PLATFORM) \
+		--image-name $(DEVCONTAINER_IMAGE) \
+		$(DEVCONTAINER_FLAGS)
