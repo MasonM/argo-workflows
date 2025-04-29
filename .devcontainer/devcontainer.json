@@ -1,6 +1,6 @@
 {
   // TODO: Bump to ubuntu-24.04 once Python issues are fixed: https://github.com/argoproj/argo-workflows/pull/14302#issuecomment-2742883052
-  "image": "mcr.microsoft.com/vscode/devcontainers/base:ubuntu-22.04",
+  "image": "mcr.microsoft.com/vscode/devcontainers/base:1.2.3-ubuntu24.04",
   "appPort": 8080,
   "features": {
     "ghcr.io/devcontainers/features/go:1": {
