@@ -276,8 +276,8 @@ func (as *argoServer) Run(ctx context.Context, port int, browserOpenFunc func(st
 
 	// Cmux is used to support servicing gRPC and HTTP1.1+JSON on the same port
 	tcpm := cmux.New(conn)
-	httpL := tcpm.Match(cmux.HTTP1Fast())
-	grpcL := tcpm.Match(cmux.Any())
+	grpcL := tcpm.MatchWithWriters(cmux.HTTP2MatchHeaderFieldPrefixSendSettings("content-type", "application/grpc"))
+	httpL := tcpm.Match(cmux.Any())
 
 	wftmplStore.Run(as.stopCh)
 	cwftmplInformer.Run(as.stopCh)
