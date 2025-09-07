@@ -171,7 +171,13 @@ func (woc *cronWfOperationCtx) persistUpdate(ctx context.Context) {
 }
 
 func (woc *cronWfOperationCtx) persistCurrentWorkflowStatus(ctx context.Context) {
-	woc.patch(ctx, map[string]interface{}{"status": map[string]interface{}{"active": woc.cronWf.Status.Active, "succeeded": woc.cronWf.Status.Succeeded, "failed": woc.cronWf.Status.Failed, "phase": woc.cronWf.Status.Phase}})
+	woc.patch(ctx, map[string]interface{}{"status": map[string]interface{}{
+		"active":            woc.cronWf.Status.Active,
+		"succeeded":         woc.cronWf.Status.Succeeded,
+		"failed":            woc.cronWf.Status.Failed,
+		"phase":             woc.cronWf.Status.Phase,
+		"lastScheduledTime": woc.cronWf.Status.LastScheduledTime,
+	}})
 }
 
 func (woc *cronWfOperationCtx) patch(ctx context.Context, patch map[string]interface{}) {
@@ -370,6 +376,14 @@ func (woc *cronWfOperationCtx) reconcileActiveWfs(ctx context.Context, workflows
 		if !woc.cronWf.Status.HasActiveUID(wf.UID) && !wf.Status.Fulfilled() {
 			updated = true
 			woc.cronWf.Status.Active = append(woc.cronWf.Status.Active, getWorkflowObjectReference(&wf, &wf))
+		}
+		if v, ok := wf.Annotations[common.AnnotationKeyCronWfScheduledTime]; ok {
+			if scheduledTime, err := time.Parse(time.RFC3339, v); err == nil {
+				if woc.cronWf.Status.LastScheduledTime == nil || scheduledTime.After(woc.cronWf.Status.LastScheduledTime.Time) {
+					updated = true
+					woc.cronWf.Status.LastScheduledTime = &v1.Time{Time: scheduledTime}
+				}
+			}
 		}
 	}
 
