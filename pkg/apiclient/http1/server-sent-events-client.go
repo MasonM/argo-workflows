@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"context"
 	"encoding/json"
+	"io"
+	"net/http"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
@@ -15,8 +17,17 @@ import (
 // simple and consistent
 type serverSentEventsClient struct {
 	// nolint: containedctx
-	ctx    context.Context
-	reader *bufio.Reader
+	ctx context.Context
+	*bufio.Reader
+	io.Closer
+}
+
+func NewServerSentEventsClient(ctx context.Context, response *http.Response) serverSentEventsClient {
+	return serverSentEventsClient{
+		ctx:    ctx,
+		Reader: bufio.NewReader(response.Body),
+		Closer: response.Body,
+	}
 }
 
 func (c serverSentEventsClient) Header() (metadata.MD, error) {
@@ -48,8 +59,11 @@ const prefixLength = len("data: ")
 func (c serverSentEventsClient) RecvEvent(v interface{}) error {
 	log := logging.RequireLoggerFromContext(c.ctx)
 	for {
-		line, err := c.reader.ReadBytes('\n')
+		line, err := c.ReadBytes('\n')
 		if err != nil {
+			if err == io.EOF {
+				c.Close()
+			}
 			return err
 		}
 		log.Debug(c.ctx, string(line))

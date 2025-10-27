@@ -1,7 +1,6 @@
 package http1
 
 import (
-	"bufio"
 	"bytes"
 	"context"
 	"crypto/tls"
@@ -49,7 +48,7 @@ func (h Facade) Delete(ctx context.Context, in, out interface{}, path string) er
 	return h.do(ctx, in, out, "DELETE", path)
 }
 
-func (h Facade) EventStreamReader(ctx context.Context, in interface{}, path string) (*bufio.Reader, error) {
+func (h Facade) EventStreamReader(ctx context.Context, in interface{}, path string) (*http.Response, error) {
 	log := logging.RequireLoggerFromContext(ctx)
 	method := "GET"
 	u, err := h.url(method, path, in)
@@ -87,7 +86,7 @@ func (h Facade) EventStreamReader(ctx context.Context, in interface{}, path stri
 		resp.Body.Close()
 		return nil, err
 	}
-	return bufio.NewReader(resp.Body), nil
+	return resp, nil
 }
 
 func (h Facade) do(ctx context.Context, in interface{}, out interface{}, method string, path string) error {

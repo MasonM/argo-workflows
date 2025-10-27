@@ -27,19 +27,19 @@ func (h WorkflowServiceClient) ListWorkflows(ctx context.Context, in *workflowpk
 }
 
 func (h WorkflowServiceClient) WatchWorkflows(ctx context.Context, in *workflowpkg.WatchWorkflowsRequest, _ ...grpc.CallOption) (workflowpkg.WorkflowService_WatchWorkflowsClient, error) {
-	reader, err := h.EventStreamReader(ctx, in, "/api/v1/workflow-events/{namespace}")
+	response, err := h.EventStreamReader(ctx, in, "/api/v1/workflow-events/{namespace}")
 	if err != nil {
 		return nil, err
 	}
-	return watchWorkflowsClient{serverSentEventsClient{ctx, reader}}, nil
+	return watchWorkflowsClient{NewServerSentEventsClient(ctx, response)}, nil
 }
 
 func (h WorkflowServiceClient) WatchEvents(ctx context.Context, in *workflowpkg.WatchEventsRequest, _ ...grpc.CallOption) (workflowpkg.WorkflowService_WatchEventsClient, error) {
-	reader, err := h.EventStreamReader(ctx, in, "/api/v1/stream/events/{namespace}")
+	response, err := h.EventStreamReader(ctx, in, "/api/v1/stream/events/{namespace}")
 	if err != nil {
 		return nil, err
 	}
-	return eventWatchClient{serverSentEventsClient{ctx, reader}}, nil
+	return eventWatchClient{NewServerSentEventsClient(ctx, response)}, nil
 }
 
 func (h WorkflowServiceClient) DeleteWorkflow(ctx context.Context, in *workflowpkg.WorkflowDeleteRequest, _ ...grpc.CallOption) (*workflowpkg.WorkflowDeleteResponse, error) {
@@ -88,19 +88,19 @@ func (h WorkflowServiceClient) LintWorkflow(ctx context.Context, in *workflowpkg
 }
 
 func (h WorkflowServiceClient) PodLogs(ctx context.Context, in *workflowpkg.WorkflowLogRequest, _ ...grpc.CallOption) (workflowpkg.WorkflowService_PodLogsClient, error) {
-	reader, err := h.EventStreamReader(ctx, in, "/api/v1/workflows/{namespace}/{name}/{podName}/log")
+	response, err := h.EventStreamReader(ctx, in, "/api/v1/workflows/{namespace}/{name}/{podName}/log")
 	if err != nil {
 		return nil, err
 	}
-	return &podLogsClient{serverSentEventsClient{ctx, reader}}, nil
+	return &podLogsClient{NewServerSentEventsClient(ctx, response)}, nil
 }
 
 func (h WorkflowServiceClient) WorkflowLogs(ctx context.Context, in *workflowpkg.WorkflowLogRequest, _ ...grpc.CallOption) (workflowpkg.WorkflowService_WorkflowLogsClient, error) {
-	reader, err := h.EventStreamReader(ctx, in, "/api/v1/workflows/{namespace}/{name}/log")
+	response, err := h.EventStreamReader(ctx, in, "/api/v1/workflows/{namespace}/{name}/log")
 	if err != nil {
 		return nil, err
 	}
-	return &podLogsClient{serverSentEventsClient{ctx, reader}}, nil
+	return &podLogsClient{NewServerSentEventsClient(ctx, response)}, nil
 }
 
 func (h WorkflowServiceClient) SubmitWorkflow(ctx context.Context, in *workflowpkg.WorkflowSubmitRequest, _ ...grpc.CallOption) (*wfv1.Workflow, error) {
