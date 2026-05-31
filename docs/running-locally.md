@@ -151,12 +151,6 @@ Note that this is destructive and will delete any data you have stored.
 make postgres-cli < db-dumps/2024-10-16T17:11:58Z.sql
 ```
 
-To test SSO integration, use `PROFILE=sso`:
-
-```bash
-make start UI=true PROFILE=sso
-```
-
 ### Proxying
 
 When using `UI=true`, `make start` will start [webpack-dev-server](https://github.com/webpack/webpack-dev-server) to serve requests to <http://localhost:8080>, while proxying API requests to the Argo Server at <http://localhost:2746>.
@@ -167,9 +161,6 @@ For example, to make the UI accessible at <http://localhost:8080/argo/>:
 ```bash
 make start UI=true BASE_HREF=/argo/
 ```
-
-Note that if you're using `PROFILE=sso`, you may need to run `kubectl rollout restart deploy dex` to restart Dex after changing the base HREF.
-
 ### TLS
 
 By default, `make start` will start Argo in [plain text mode](tls.md#plain-text).
@@ -184,6 +175,24 @@ To start Argo in [encrypted mode](tls.md#encrypted), use `SECURE=true`, which ca
 ```bash
 make start SECURE=true UI_SECURE=true
 ```
+
+### SSO
+
+To test SSO integration, use `PROFILE=sso`:
+
+```bash
+# Full HTTPS
+make start SECURE=true UI_SECURE=true PROFILE=sso
+# Unencrypted mode
+make start UI=true PROFILE=sso
+# Disable PKCE
+make start SECURE=true UI_SECURE=true PROFILE=sso SSO_ENABLE_PKCE=false
+```
+
+Changing `UI_SECURE` and/or `BASE_HREF` will cause the `Makefile` to rewrite the issuer and redirect URLs appropriately.
+
+Note that if you change `BASE_HREF` or `SSO_PKCE`, you will need to run `kubectl rollout restart deploy dex` to restart Dex.
+
 
 ### Running E2E tests locally
 

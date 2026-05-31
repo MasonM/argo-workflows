@@ -41,3 +41,4 @@ data:
     - profile
     rbac:
       enabled: true
+    enablePKCEAuthentication: true

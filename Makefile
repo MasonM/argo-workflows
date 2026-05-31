@@ -104,6 +104,9 @@ endif
 # -- SSO options
 # Need to rewrite the SSO redirect URL referenced in ConfigMaps when UI_SECURE and/or BASE_HREF is set.
 # Can't use "kustomize" or "kubectl patch" because the SSO config is a YAML string in those ConfigMaps.
+# TODO: Kustomize 5.8.0 added support for patching YAML strings (https://github.com/kubernetes-sigs/kustomize/pull/5679),
+# which was shipped in k8s 1.36, so we should switch to that when we require k8s 1.36+.
+SSO_ENABLE_PKCE    := true
 SSO_REDIRECT_URL   := http
 SSO_ISSUER_URL     := http://dex:5556/dex
 ifeq ($(UI_SECURE),true)
@@ -627,6 +630,7 @@ install: githooks ## Install Argo to the current Kubernetes cluster
 		| sed 's/namespace: argo/namespace: $(KUBE_NAMESPACE)/' \
 		| sed 's|http://localhost:8080/oauth2/callback|$(SSO_REDIRECT_URL)|' \
 		| sed 's|http://dex:5556/dex|$(SSO_ISSUER_URL)|' \
+		| sed 's|enablePKCEAuthentication: true|enablePKCEAuthentication: $(SSO_ENABLE_PKCE)|' \
 		| KUBECTL_APPLYSET=true kubectl -n $(KUBE_NAMESPACE) apply --applyset=configmaps/install --server-side --prune -f -
 ifeq ($(PROFILE),stress)
 	kubectl -n $(KUBE_NAMESPACE) apply -f test/stress/massive-workflow.yaml
